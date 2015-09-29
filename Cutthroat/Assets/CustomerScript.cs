@@ -2,20 +2,23 @@
 using System.Collections.Generic;
 using System.Collections;
 
+public enum CustomerState {Shopping,Entering,Waiting,Leaving,HeadingHome,AtHome};
+
 public class CustomerScript : MonoBehaviour {
 
+    public CustomerState myState;
     public NavMeshAgent agent;
-    public GameObject target;
+    public GameObject moveTarget;
     public GameObject home;
-
-    public bool shopping = true;
+    public StoreBase targetedStore;
     public Recipe desiredProduct;
 
     Dictionary<StoreBase, float> StoreFavorability;
     Dictionary<StoreBase, float> StoreAwareness;
+    List<StoreBase> EncounteredStores;
+
     const float baseWeight = 50;
     const float randomStoreChance = .10f;
-
 
     const float maxFavorability = 100f;
     const float minFavorability = -100f;
@@ -23,49 +26,120 @@ public class CustomerScript : MonoBehaviour {
     const float minAwareness = 0f;
 
     const float newStoreAwareness = 20f;
+    const float newStoreFavorability = 0f;
     const float couldBuyFavorability = 10f;
-    const float couldNotBuyFavorability = -10f;
+    const float couldNotBuyFavorability = -5f;
+    const float waitedForNothingFavorability = -10f;
 
     const int maxTrips = 3;
+    const float maxWaitTime = 10f;
+    const float sleepTime = 5f;
 
+    const float interactionRange = 1f;
+    const float scanRange = 3f;
+    const float scanCoolMin = .5f;
+    const float scanCoolMax = 1.5f;
+    
+    public float currentWaitTime = 0f;
     public int currentNumTrips = 0;
+    public float scanCooldown = 0f;
+    public float sleepTimeRemaining = 0f;
 
-    public string debugString;
-    public string[] debugStoreOptions;
-    //public Custom
-	// Use this for initialization
     static int count;
     static int myCount;
-	void Start () {
+    List<string> debugStringList;
+    public int maxDebugStringLength = 10;
+    public string[] debugStringArray;
+    public string[] debugStoreOptions;
+    public int myPosInLine;
+
+    void Start () {
         gameObject.name = "Customer " + home.GetComponent<HouseScript>().myCount+"-"+myCount;
         myCount = count;
         count++;
 
         StoreFavorability = new Dictionary<StoreBase, float>();
         StoreAwareness = new Dictionary<StoreBase, float>();
+        EncounteredStores = new List<StoreBase>();
+        debugStringList = new List<string>();
+        myState = CustomerState.AtHome;
 
         agent = GetComponent<NavMeshAgent>();
         PickNewProduct();
     }
 
-     StoreBase PickNextStore() //GameObject excludedStore = null
+    // Update is called once per frame
+    void Update()
     {
-        if (StoreAwareness.Keys.Count <= 0 || Random.Range(0f, 1f) <= randomStoreChance)
+        switch (myState)
         {
-            GameObject[] allstores = GameObject.FindGameObjectsWithTag("Store");
-            return allstores[Random.Range(0, allstores.Length)].GetComponent<StoreBase>();
+            case CustomerState.Shopping:
+                ScanForNewStores();
+                if (targetedStore == null && GameObject.FindGameObjectsWithTag("Store").Length > 0)
+                {
+                    targetStore(PickNextStore().gameObject);
+                    debugStringList.Add("A new day. I need " + desiredProduct.ToString() + ". I'll try " + targetedStore.gameObject.name + " next.");
+                }
+
+                if (Vector3.Distance(transform.position, targetedStore.transform.position) < interactionRange)
+                    EnterStore();
+
+                break;
+
+            case CustomerState.Waiting:
+                WaitInLine();
+                break;
+
+            case CustomerState.HeadingHome:
+                if (Vector3.Distance(transform.position, moveTarget.transform.position) < interactionRange)
+                {
+                    debugStringList.Add("Home sweet home!");
+                    sleepTimeRemaining = sleepTime;
+                    myState = CustomerState.AtHome;
+                }
+                break;
+
+            case CustomerState.AtHome:
+                sleepTimeRemaining -= Time.deltaTime;
+                if (sleepTimeRemaining <= 0)
+                {
+                    PickNewProduct();
+                    targetStore(PickNextStore().gameObject);
+                    debugStringList.Add("Morning already? I need " + desiredProduct.ToString() + ". I'll try " + targetedStore.gameObject.name + " next.");
+                }
+                break;
+
+            default:
+                break;
         }
+
+        if (moveTarget != null)
+            agent.SetDestination(moveTarget.transform.position);
+
+
+        while (debugStringList.Count > maxDebugStringLength)
+            debugStringList.RemoveAt(0);
+        debugStringArray = debugStringList.ToArray();
+    }
+
+    StoreBase PickNextStore(StoreBase excludedStore = null) //
+    {
+        GameObject[] allstores = GameObject.FindGameObjectsWithTag("Store");
+        if (StoreAwareness.Keys.Count <= 0 || Random.Range(0f, 1f) <= randomStoreChance)
+            return allstores[Random.Range(0, allstores.Length)].GetComponent<StoreBase>();
 
         Dictionary<StoreBase, float> StoreWeights = new Dictionary<StoreBase, float>();
         float totalWeight = 0;
         foreach (StoreBase store in StoreAwareness.Keys)
         {
-          //  if (excludedStore != null && (excludedStore.GetComponent<StoreBase>() != null && store != excludedStore.GetComponent<StoreBase>()))
-            
+            //  if (excludedStore != null && (excludedStore.GetComponent<StoreBase>() != null && store != excludedStore.GetComponent<StoreBase>()))
+            if (store != excludedStore)
+            {
                 float myWeight = Mathf.Max(1, baseWeight + StoreFavorability[store] + StoreAwareness[store]);
                 StoreWeights.Add(store, myWeight);
                 totalWeight += myWeight;
-            
+            }
+
         }
 
         List<string> debugList = new List<string>();
@@ -75,15 +149,19 @@ public class CustomerScript : MonoBehaviour {
 
         float rolledWeight = Random.Range(0, totalWeight);
 
-        foreach(StoreBase store in StoreWeights.Keys)
+        foreach (StoreBase store in StoreWeights.Keys)
         {
             rolledWeight -= StoreWeights[store];
             if (rolledWeight <= 0)
                 return store;
-                
+
         }
 
-        return null;
+        //if found nothing just pick one at random
+        StoreBase totallyRandomStore = null;
+        while (totallyRandomStore == null || totallyRandomStore == excludedStore)
+            totallyRandomStore = allstores[Random.Range(0, allstores.Length)].GetComponent<StoreBase>();
+        return totallyRandomStore;
     }
 
     public void AddAwareness(StoreBase store, float amount)
@@ -102,83 +180,148 @@ public class CustomerScript : MonoBehaviour {
 
     void StoreCheck(StoreBase store)
     {
-        if (!StoreFavorability.ContainsKey(store))
-            StoreFavorability.Add(store, 0);
         if (!StoreAwareness.ContainsKey(store))
-            StoreAwareness.Add(store, 0);
+            StoreAwareness.Add(store, newStoreAwareness);
+        if (!StoreFavorability.ContainsKey(store))
+            StoreFavorability.Add(store, newStoreFavorability);
     }
 
-
-    // Update is called once per frame
-    void Update () {
-
-        if (shopping)
-        {
-            GameObject[] stores = GameObject.FindGameObjectsWithTag("Store");
-            if (target == null && stores.Length > 0)
-            {
-                StoreBase newStore = PickNextStore();
-                target = newStore.gameObject;
-
-                debugString = "A new day. I need " + desiredProduct.ToString() + ". I'll try " + target.gameObject.name + " next.";
-
-                if (!StoreAwareness.ContainsKey(newStore))
-                    AddAwareness(newStore, newStoreAwareness);
-            }
-
-            if (Vector3.Distance(transform.position, target.transform.position) < 1)
-            {//attempt purchase
-                StoreBase store = target.GetComponent<StoreBase>();
-                if (store.TryBuyProduct(desiredProduct)) //returns success boolean
-                {
-                    shopping = false;
-                    AddFavorability(store, couldBuyFavorability);
-                    debugString = "I was able to buy " + desiredProduct.ToString() + " from " + target.gameObject.name + "! Time to go home.";
-                }
-                else //try somewhere else
-                {
-                    AddFavorability(store, couldNotBuyFavorability);
-                    GameObject oldTarget = target;
-                    target = PickNextStore().gameObject;
-                    if(target!=oldTarget)
-                        currentNumTrips++;
-
-                    debugString = oldTarget.gameObject.name + " didn't have " + desiredProduct.ToString() + ". ";
-                    if (currentNumTrips >= maxTrips)
-                        debugString += "I'm giving up and going home.";
-                    else
-                        debugString += "I'll try " + target.gameObject.name + " next. I'll try a max of " + (maxTrips - currentNumTrips) + " more stores.";
-                   // Debug.Log(debugString);
-
-                    if (currentNumTrips >= maxTrips)
-                    {
-                        shopping = false;
-                        currentNumTrips = 0;
-                    }
-
-                }
-
-            }
-        }
+    private void targetStore(GameObject store)
+    {
+        moveTarget = store;
+        targetedStore = store.GetComponent<StoreBase>();
+        myState = CustomerState.Shopping;
         
-        if(!shopping)
+
+    }
+
+    private void targetHome()
+    {
+        moveTarget = home;
+        myState = CustomerState.HeadingHome;
+    }
+
+    private void ScanForNewStores()
+    {
+        GameObject[] initalStores = GameObject.FindGameObjectsWithTag("Store");
+        List<GameObject> stores = new List<GameObject>();
+        foreach(GameObject o in initalStores)
         {
-            target = home;
-            if (Vector3.Distance(transform.position, target.transform.position) < 1)
-            {
-                PickNewProduct();
-                shopping = true;
-                target = null;
-            }
+            if (o.GetComponent<StoreBase>() != null)
+                stores.Add(o);
+            else
+                Debug.Log(o.name + " has no attached store script???");
         }
 
 
-        if(target!=null)
-        agent.SetDestination(target.transform.position);
+        for(int i = 0; i< stores.Count;i++)
+        {
+            if (Vector3.Distance(gameObject.transform.position, stores[i].transform.position) <= scanRange)
+            {
+                StoreBase store = stores[i].GetComponent<StoreBase>();
 
-        //  agent.
+                if (!EncounteredStores.Contains(store))
+                {
+                    EncounteredStores.Add(store);
+                    AddAwareness(store, store.PassbyAwarenessBonus());
+                }
+            }
+        }
+    }
+
+    private void EnterStore()
+    {
+        AddFavorability(targetedStore, targetedStore.WalkInFavorabilityBonus());
+
+        debugStringList.Add("Going inside " + targetedStore.gameObject.name + ".");
+        
+
+        if (targetedStore.CanMakeProduct(desiredProduct))
+        {
+            debugStringList.Add(targetedStore.gameObject.name + " sells " + desiredProduct.ToString() + "! I'm getting in line.");
+            currentWaitTime = 0;
+            myState = CustomerState.Waiting;
+        }
+        else
+        {
+            debugStringList.Add(targetedStore.gameObject.name + " doesn't have any "+desiredProduct.ToString()+".");
+            LeaveStore();
+            TryAnotherStore();
+         }
+
+    }
+
+    private void WaitInLine()
+    {
+        currentWaitTime += Time.deltaTime;
+
+        if(!targetedStore.CustomerQueue.Contains(this))
+            targetedStore.CustomerQueue.Add(this);
+
+        myPosInLine = targetedStore.CustomerQueue.IndexOf(this);
+        if (myPosInLine <= 0)
+            moveTarget = targetedStore.gameObject;
+        else
+            moveTarget = targetedStore.CustomerQueue[myPosInLine - 1].gameObject;
+
+        if (currentWaitTime > maxWaitTime)
+        {
+            debugStringList.Add("The wait at "+ targetedStore.gameObject.name + " is too long!");
+            LeaveStore();
+            TryAnotherStore();
+        }
+    }
+
+    public void LeaveStore()
+    {
+        currentWaitTime = 0;
+        targetedStore.CustomerQueue.Remove(this);
+        debugStringList.Add("I'm leaving " + targetedStore.gameObject.name + ".");
+        targetedStore = null;
+    }
+    
+    public void AttemptTransaction()
+    {
+        if (targetedStore.TryBuyProduct(desiredProduct)) //returns success boolean
+        {
+            
+            AddFavorability(targetedStore, couldBuyFavorability);
+            debugStringList.Add("I was able to buy " + desiredProduct.ToString() + " from " + targetedStore.gameObject.name + "! Time to go home.");
+            LeaveStore();
+            targetHome();
+        }
+        else
+        {
+            AddFavorability(targetedStore, waitedForNothingFavorability);
+            debugStringList.Add(targetedStore.gameObject.name + " ran out of " + desiredProduct.ToString() + "! ");
+            LeaveStore();
+            TryAnotherStore();
+        }
+    }
+
+    private void TryAnotherStore()
+    {
+        GameObject oldTarget = null;
+        if (targetedStore != null)
+            oldTarget = targetedStore.gameObject;
+
+        if (oldTarget != null && oldTarget.GetComponent<StoreBase>() != null)
+            targetStore(PickNextStore(oldTarget.GetComponent<StoreBase>()).gameObject);
+        else
+            targetStore(PickNextStore().gameObject);
+
+        currentNumTrips++;
 
 
+
+        if (currentNumTrips >= maxTrips)
+        {
+            targetHome();
+            currentNumTrips = 0;
+            debugStringList.Add("I'm just giving up and going home.");
+        }
+        else
+            debugStringList.Add("I'll try " + moveTarget.gameObject.name + " next. I'll try a max of " + (maxTrips - currentNumTrips) + " more stores.");
     }
 
     void PickNewProduct()
@@ -188,7 +331,5 @@ public class CustomerScript : MonoBehaviour {
         allRecipes.Add(Recipe.PassionPotion);
 
         desiredProduct = allRecipes[Random.Range(0, allRecipes.Count)];
-
-        //desiredProduct = enum Recipe
     }
 }

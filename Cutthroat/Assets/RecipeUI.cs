@@ -24,7 +24,9 @@ public class RecipeUI : MonoBehaviour {
         Ingredients.text = "";
         foreach(Ingredient ingr in GameManager.singleton.recipeBook[myRecipe].Keys)
         {
-            Ingredients.text += ingr.ToString() + " " + GameManager.singleton.recipeBook[myRecipe][ingr] +"\n";
+            if (!Ingredients.text.Equals(""))
+                Ingredients.text += "\n";
+            Ingredients.text += ingr.ToString() + " " + GameManager.singleton.recipeBook[myRecipe][ingr];
         }
 
     }

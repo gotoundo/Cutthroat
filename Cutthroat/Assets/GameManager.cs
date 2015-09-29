@@ -2,21 +2,49 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+
 public enum Recipe { DreamPowder, PassionPotion }
+
 public class GameManager : MonoBehaviour {
+
     public static GameManager singleton;
+
     public GameObject playerStore;
     public StoreBase player;
-  //  public GameObject ingredientStore;
-    public Text ingredientStoreDisplay;
     public Text playerIngredientDisplay;
     public Text playerGoldDisplay;
+
+    public GameObject inspectorPanel;
+
+    public GameObject SelectedObject;
+
     public Dictionary<Recipe, Dictionary<Ingredient, int>> recipeBook;
 
-   // public Diction
+    public void MakeSelection(GameObject newSelection)
+    {
+        inspectorPanel.SetActive(true);
+
+        if (SelectedObject!=null)
+            SelectedObject.GetComponent<Inspectable>().Deselect();
+
+        newSelection.GetComponent<Inspectable>().Select();
+        SelectedObject = newSelection;
+    }
+
+    public void CloseInspector()
+    {
+        if (SelectedObject != null)
+            SelectedObject.GetComponent<Inspectable>().Deselect();
+        inspectorPanel.SetActive(false);
+    }
+
+
+
+
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         singleton = this;
+        StoreUpgrade.Initialize();
         recipeBook = new Dictionary<Recipe, Dictionary<Ingredient, int>>();
         player = playerStore.GetComponent<StoreBase>();
 
@@ -36,13 +64,11 @@ public class GameManager : MonoBehaviour {
     {
         playerGoldDisplay.text = "Your Gold: " + playerStore.GetComponent<StoreBase>().Gold;
 
-        /*ingredientStoreDisplay.text = "Ingredient Costs";
-        foreach (Ingredient ingr in IngredientStore.IngredientPrices.Keys)
-            ingredientStoreDisplay.text += "\n" + ingr.ToString() + ":  " + IngredientStore.IngredientPrices[ingr] + " gold";*/
-
         playerIngredientDisplay.text = "Your Ingredients";
         foreach (Ingredient ingr in player.GetIngredients().Keys)
             playerIngredientDisplay.text += "\n" + ingr.ToString() + ":  " + player.GetIngredients()[ingr];
 
+
+        
     }
 }

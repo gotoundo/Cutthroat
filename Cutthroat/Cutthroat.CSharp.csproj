@@ -68,15 +68,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ButtonQuantity.cs" />
     <Compile Include="Assets\CustomerScript.cs" />
     <Compile Include="Assets\GameManager.cs" />
     <Compile Include="Assets\HouseScript.cs" />
     <Compile Include="Assets\IngredientStore.cs" />
     <Compile Include="Assets\Ingredients.cs" />
+    <Compile Include="Assets\Inspectable.cs" />
+    <Compile Include="Assets\InspectorUI.cs" />
+    <Compile Include="Assets\LevelDefinition.cs" />
+    <Compile Include="Assets\MarketCountdownUI.cs" />
     <Compile Include="Assets\MarketUI.cs" />
     <Compile Include="Assets\RecipeUI.cs" />
     <Compile Include="Assets\StoreBase.cs" />
+    <Compile Include="Assets\StoreUpgrade.cs" />
     <Compile Include="Assets\UIPurchaseOption.cs" />
+    <Compile Include="Assets\UpgradeUI.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
