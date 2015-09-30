@@ -4,23 +4,28 @@ using System.Collections;
 public class Inspectable : MonoBehaviour {
 
     public bool deselectionObject = false;
+    public GameObject IndicatorObject;
 
-    Color startingColor;
-    public Color selectionColor = Color.red;
+   // Color startingColor;
+   // public Color selectionColor = Color.red;
     
     // Use this for initialization
     void Start () {
-        startingColor = GetComponent<Renderer>().material.color;
+       // startingColor = GetComponentInChildren<Renderer>().material.color;
     }
 
     public void Select()
     {
-        GetComponent<Renderer>().material.color = selectionColor;
+        if (IndicatorObject != null)
+            IndicatorObject.SetActive(true);
+        //GetComponent<Renderer>().material.color = selectionColor;
     }
 
     public void Deselect()
     {
-        GetComponent<Renderer>().material.color = startingColor;
+        if (IndicatorObject != null)
+            IndicatorObject.SetActive(false);
+        // GetComponent<Renderer>().material.color = startingColor;
     }
 	
 	// Update is called once per frame

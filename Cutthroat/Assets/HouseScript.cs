@@ -14,7 +14,8 @@ public class HouseScript : MonoBehaviour {
         
         for (int i = 0; i < customersToAHouse; i++)
         {
-            GameObject o = (GameObject)Instantiate(customer, transform.position, transform.rotation);
+            GameObject o = (GameObject)Instantiate(customer, new Vector3(transform.position.x,-4,transform.position.z), transform.rotation);
+            
             CustomerScript cust = o.GetComponent<CustomerScript>();
             cust.home = gameObject;
         }

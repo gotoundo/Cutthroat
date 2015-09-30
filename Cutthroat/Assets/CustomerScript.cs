@@ -35,7 +35,7 @@ public class CustomerScript : MonoBehaviour {
     const float maxWaitTime = 10f;
     const float sleepTime = 5f;
 
-    const float interactionRange = 1f;
+    const float interactionRange = 10f;
     const float scanRange = 3f;
     const float scanCoolMin = .5f;
     const float scanCoolMax = 1.5f;
