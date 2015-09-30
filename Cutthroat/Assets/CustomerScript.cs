@@ -48,7 +48,7 @@ public class CustomerScript : MonoBehaviour {
     static int count;
     static int myCount;
     List<string> debugStringList;
-    public int maxDebugStringLength = 10;
+    public int maxDebugStringLength = 7;
     public string[] debugStringArray;
     public string[] debugStoreOptions;
     public int myPosInLine;

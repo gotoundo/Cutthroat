@@ -15,6 +15,7 @@ public class StoreBase : MonoBehaviour
     const float baseProductionTime = 5f;//seconds
     public float productionTimeRemaining = 0f;
 
+    const float startingMargin = 1.25f;
 
     void Start()
     {
@@ -28,8 +29,8 @@ public class StoreBase : MonoBehaviour
         myIngredients.Add(Ingredient.Topaz, 10);
         myIngredients.Add(Ingredient.Sapphire, 10);
 
-        myProducts.Add(Recipe.DreamPowder, IngredientStore.AverageRecipeCost(Recipe.DreamPowder));
-        myProducts.Add(Recipe.PassionPotion, IngredientStore.AverageRecipeCost(Recipe.PassionPotion));
+        myProducts.Add(Recipe.DreamPowder, Mathf.RoundToInt(IngredientStore.AverageRecipeCost(Recipe.DreamPowder)* startingMargin));
+        myProducts.Add(Recipe.PassionPotion, Mathf.RoundToInt(IngredientStore.AverageRecipeCost(Recipe.PassionPotion)* startingMargin));
 
         myUpgrades.Add(StoreUpgrade.Type.Amenities, 0);
         myUpgrades.Add(StoreUpgrade.Type.ProductionSpeed, 0);

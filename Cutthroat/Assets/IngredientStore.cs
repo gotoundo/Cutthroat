@@ -10,7 +10,7 @@ public class IngredientStore : MonoBehaviour {
     
     public float MarketRefreshCooldown = 5f;
     public float varianceMin = .5f;
-    public float varianceMax = 2.0f;
+    public float varianceMax = 1.5f;
     public float dailyFluxMax = .5f;
     public float remainingCooldown = 0f;
 

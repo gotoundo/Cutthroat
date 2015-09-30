@@ -62,9 +62,9 @@ public class GameManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        playerGoldDisplay.text = "Your Gold: " + playerStore.GetComponent<StoreBase>().Gold;
+        playerGoldDisplay.text = ""+playerStore.GetComponent<StoreBase>().Gold+" Gold";
 
-        playerIngredientDisplay.text = "Your Ingredients";
+        playerIngredientDisplay.text = "-- Ingredients --";
         foreach (Ingredient ingr in player.GetIngredients().Keys)
             playerIngredientDisplay.text += "\n" + ingr.ToString() + ":  " + player.GetIngredients()[ingr];
 
