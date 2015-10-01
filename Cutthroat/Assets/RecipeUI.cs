@@ -8,6 +8,7 @@ public class RecipeUI : MonoBehaviour {
     public Text Name;
     public Text Ingredients;
     public Recipe myRecipe;
+    public Slider progressSlider;
     StoreBase player;
     // Use this for initialization
     void Start () {

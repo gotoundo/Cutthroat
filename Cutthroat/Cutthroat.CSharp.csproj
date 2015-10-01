@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.2.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -53,11 +51,17 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
@@ -70,11 +74,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AssetManager.cs" />
     <Compile Include="Assets\ButtonQuantity.cs" />
     <Compile Include="Assets\CustomerScript.cs" />
     <Compile Include="Assets\Draggable.cs" />
     <Compile Include="Assets\Fantasy Gui Pack\Demo\Scripts\CoolDown.cs" />
     <Compile Include="Assets\Fantasy Gui Pack\Demo\Scripts\SelectDifficulty.cs" />
+    <Compile Include="Assets\FloatingIcon.cs" />
     <Compile Include="Assets\GameManager.cs" />
     <Compile Include="Assets\HouseScript.cs" />
     <Compile Include="Assets\IngredientStore.cs" />
@@ -84,6 +90,7 @@
     <Compile Include="Assets\LevelDefinition.cs" />
     <Compile Include="Assets\MarketCountdownUI.cs" />
     <Compile Include="Assets\MarketUI.cs" />
+    <Compile Include="Assets\OverheadIconManager.cs" />
     <Compile Include="Assets\RecipeUI.cs" />
     <Compile Include="Assets\StoreBase.cs" />
     <Compile Include="Assets\StoreUpgrade.cs" />

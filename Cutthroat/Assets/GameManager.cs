@@ -8,6 +8,7 @@ public enum Recipe { DreamPowder, PassionPotion }
 public class GameManager : MonoBehaviour {
 
     public static GameManager singleton;
+    public static List<StoreBase> AllStores;
 
     public GameObject playerStore;
     public StoreBase player;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour {
 	void Awake () {
         singleton = this;
         StoreUpgrade.Initialize();
+        AllStores = new List<StoreBase>();
         recipeBook = new Dictionary<Recipe, Dictionary<Ingredient, int>>();
         player = playerStore.GetComponent<StoreBase>();
 

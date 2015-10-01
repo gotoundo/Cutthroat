@@ -5,12 +5,16 @@ using System.Collections;
 
 public class StoreBase : MonoBehaviour
 {
+
     public int Gold = 500;
     Dictionary<Ingredient, int> myIngredients; //and quantities
     Dictionary<Recipe, int> myProducts; //and costs
     Dictionary<StoreUpgrade.Type, int> myUpgrades;
 
     public List<CustomerScript> CustomerQueue;
+
+
+    public Recipe CurrentlyMaking;
 
     const float baseProductionTime = 5f;//seconds
     public float productionTimeRemaining = 0f;
@@ -19,6 +23,8 @@ public class StoreBase : MonoBehaviour
 
     void Start()
     {
+        GameManager.AllStores.Add(this);
+
         myIngredients = new Dictionary<Ingredient, int>();
         myProducts = new Dictionary<Recipe, int>();
         myUpgrades = new Dictionary<StoreUpgrade.Type, int>();
@@ -123,6 +129,7 @@ public class StoreBase : MonoBehaviour
             MakeProduct(product);
             Gold += myProducts[product];
             success = true;
+            GetComponentInParent<OverheadIconManager>().ShowIcon(AssetManager.singleton.OverheadIcons[1], 1f);
         }
         return success;
     }
