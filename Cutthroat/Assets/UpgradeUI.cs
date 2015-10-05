@@ -22,7 +22,11 @@ public class UpgradeUI : MonoBehaviour
     {
         CurrentLevel.text = "Level " + GameManager.singleton.player.GetUpgrades()[UpgradeType];
         PurchaseButton.interactable = GameManager.singleton.player.CanPurchaseUpgrade(UpgradeType);
-        Price.text = "" + GameManager.singleton.player.NextUpgradeCost(UpgradeType) + " Gold";
+        int goldPrice = GameManager.singleton.player.NextUpgradeCost(UpgradeType);
+        if (goldPrice == -1)
+            Price.text = "Max Upgrade";
+        else
+            Price.text = "" + GameManager.singleton.player.NextUpgradeCost(UpgradeType) + " Gold";
     }
 
     public void Purchase()

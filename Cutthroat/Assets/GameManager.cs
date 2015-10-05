@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager singleton;
     public static List<StoreBase> AllStores;
+	public static List<CustomerScript> AllCustomers;
 
     public GameObject playerStore;
     public StoreBase player;
@@ -47,6 +48,7 @@ public class GameManager : MonoBehaviour {
         singleton = this;
         StoreUpgrade.Initialize();
         AllStores = new List<StoreBase>();
+		AllCustomers = new List<CustomerScript> ();
         recipeBook = new Dictionary<Recipe, Dictionary<Ingredient, int>>();
         player = playerStore.GetComponent<StoreBase>();
 

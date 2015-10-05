@@ -33,6 +33,6 @@ public class UIPurchaseOption : MonoBehaviour {
 
     public void AttemptPurchase(Button b)
     {
-        player.TryBuyIngredients(ItemSold, IngredientStore.CurrentIngredientPrices[ItemSold], b.GetComponent<ButtonQuantity>().Quantity);
+        player.TryBuyIngredients(ItemSold, b.GetComponent<ButtonQuantity>().Quantity);
     }
 }
