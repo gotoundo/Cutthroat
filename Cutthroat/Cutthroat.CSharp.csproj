@@ -51,17 +51,11 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Advertisements">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Analytics">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
@@ -74,32 +68,36 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AssetManager.cs" />
-    <Compile Include="Assets\ButtonQuantity.cs" />
-    <Compile Include="Assets\CustomerScript.cs" />
-    <Compile Include="Assets\Draggable.cs" />
     <Compile Include="Assets\Fantasy Gui Pack\Demo\Scripts\CoolDown.cs" />
     <Compile Include="Assets\Fantasy Gui Pack\Demo\Scripts\SelectDifficulty.cs" />
-    <Compile Include="Assets\FloatingIcon.cs" />
-    <Compile Include="Assets\GameManager.cs" />
-    <Compile Include="Assets\HouseScript.cs" />
-    <Compile Include="Assets\IngredientStore.cs" />
-    <Compile Include="Assets\Ingredients.cs" />
-    <Compile Include="Assets\Inspectable.cs" />
-    <Compile Include="Assets\InspectorUI.cs" />
-    <Compile Include="Assets\LevelDefinition.cs" />
-    <Compile Include="Assets\MarketCountdownUI.cs" />
-    <Compile Include="Assets\MarketUI.cs" />
-    <Compile Include="Assets\MarketingUI.cs" />
-    <Compile Include="Assets\OverheadIconManager.cs" />
-    <Compile Include="Assets\PopularityPanelUI.cs" />
-    <Compile Include="Assets\ProgressPanel.cs" />
-    <Compile Include="Assets\RecipeUI.cs" />
-    <Compile Include="Assets\StoreBase.cs" />
-    <Compile Include="Assets\StoreUpgrade.cs" />
-    <Compile Include="Assets\TreeRandomize.cs" />
-    <Compile Include="Assets\UIPurchaseOption.cs" />
-    <Compile Include="Assets\UpgradeUI.cs" />
+    <Compile Include="Assets\LevelManager.cs" />
+    <Compile Include="Assets\MainMenuManager.cs" />
+    <Compile Include="Assets\Scripts\AssetManager.cs" />
+    <Compile Include="Assets\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\ButtonQuantity.cs" />
+    <Compile Include="Assets\Scripts\CustomerScript.cs" />
+    <Compile Include="Assets\Scripts\Draggable.cs" />
+    <Compile Include="Assets\Scripts\FloatingIcon.cs" />
+    <Compile Include="Assets\Scripts\ForecastUI.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\HouseScript.cs" />
+    <Compile Include="Assets\Scripts\IngredientStore.cs" />
+    <Compile Include="Assets\Scripts\Ingredients.cs" />
+    <Compile Include="Assets\Scripts\Inspectable.cs" />
+    <Compile Include="Assets\Scripts\InspectorUI.cs" />
+    <Compile Include="Assets\Scripts\LevelDefinition.cs" />
+    <Compile Include="Assets\Scripts\MarketCountdownUI.cs" />
+    <Compile Include="Assets\Scripts\MarketUI.cs" />
+    <Compile Include="Assets\Scripts\MarketingUI.cs" />
+    <Compile Include="Assets\Scripts\OverheadIconManager.cs" />
+    <Compile Include="Assets\Scripts\PopularityPanelUI.cs" />
+    <Compile Include="Assets\Scripts\ProgressPanel.cs" />
+    <Compile Include="Assets\Scripts\RecipeUI.cs" />
+    <Compile Include="Assets\Scripts\StoreBase.cs" />
+    <Compile Include="Assets\Scripts\StoreUpgrade.cs" />
+    <Compile Include="Assets\Scripts\TreeRandomize.cs" />
+    <Compile Include="Assets\Scripts\UIPurchaseOption.cs" />
+    <Compile Include="Assets\Scripts\UpgradeUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Lowpoly Township Set\Readme.txt" />
