@@ -165,7 +165,7 @@ public class StoreBase : MonoBehaviour
             success = true;
             if (!Robot)
             {
-                GetComponentInParent<OverheadIconManager>().ShowIcon(AssetManager.singleton.OverheadIcons[1], 1f);
+                GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[1], 1f);
                 AudioManager.Main.Source.PlayOneShot(AudioManager.Main.SaleMade,0.3f);
             }
         }

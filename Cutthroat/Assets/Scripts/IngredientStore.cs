@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public enum Ingredient { Ruby, Sapphire, Emerald, Topaz }
 public class IngredientStore : MonoBehaviour {
 
+    public static IngredientStore Main;
+
     public static Dictionary<Ingredient, int> NextIngredientPrices;
     public static Dictionary<Ingredient, int> CurrentIngredientPrices;
     public static Dictionary<Ingredient, int> DefaultIngredientPrices;
@@ -28,6 +30,7 @@ public class IngredientStore : MonoBehaviour {
 
     // Use this for initialization
     void Awake () {
+        Main = this;
         remainingCooldown = 0;
         NextIngredientPrices = new Dictionary<Ingredient, int>();
         CurrentIngredientPrices = new Dictionary<Ingredient, int>();

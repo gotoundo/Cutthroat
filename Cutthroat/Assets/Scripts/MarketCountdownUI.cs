@@ -4,7 +4,7 @@ using System.Collections;
 
 public class MarketCountdownUI : MonoBehaviour {
 
-    public IngredientStore ingredientStore;
+  //  public IngredientStore ingredientStore;
 
 	// Use this for initialization
 	void Start () {
@@ -13,7 +13,7 @@ public class MarketCountdownUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        GetComponent<Text>().text = "Time until market refresh: " + (int)ingredientStore.remainingCooldown;
+        GetComponent<Text>().text = "Time until market refresh: " + (int)IngredientStore.Main.remainingCooldown;
 
     }
 }

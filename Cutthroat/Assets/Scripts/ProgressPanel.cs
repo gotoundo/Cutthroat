@@ -5,6 +5,28 @@ using System.Collections.Generic;
 
 public class ProgressPanel : MonoBehaviour {
 
+    public static float popularityPercent(StoreBase storeToCheck)
+    {
+        Dictionary<StoreBase, float> StoreFavorabilities = new Dictionary<StoreBase, float>();
+        float totalFavorability = 0f;
+
+        foreach (StoreBase store in GameManager.AllStores)
+        {
+            StoreFavorabilities.Add(store, 0f);
+            foreach (CustomerScript customer in GameManager.AllCustomers)
+            {
+                if (customer.StoreFavorability.ContainsKey(store))
+                {
+                    StoreFavorabilities[store] += customer.StoreFavorability[store];
+                    totalFavorability += customer.StoreFavorability[store];
+                }
+            }
+        }
+
+        return StoreFavorabilities[storeToCheck] / totalFavorability;
+
+    }
+
 	public Slider mySlider;
     public Text storeName;
 	public Text debugText;
@@ -24,7 +46,7 @@ public class ProgressPanel : MonoBehaviour {
 
     private void DisplayFavorability()
     {
-        Dictionary<StoreBase, float> StoreFavorabilities = new Dictionary<StoreBase, float>();
+       /* Dictionary<StoreBase, float> StoreFavorabilities = new Dictionary<StoreBase, float>();
         float totalFavorability = 0f;
 
         foreach (StoreBase store in GameManager.AllStores)
@@ -38,10 +60,10 @@ public class ProgressPanel : MonoBehaviour {
                     totalFavorability += customer.StoreFavorability[store];
                 }
             }
-        }
+        }*/
 
-        mySlider.value = StoreFavorabilities[myStore] / totalFavorability;
+        mySlider.value = popularityPercent(myStore);
 
-        debugText.text = "" + Mathf.RoundToInt(100*StoreFavorabilities[myStore] / totalFavorability)+"%";
+        debugText.text = "" + Mathf.RoundToInt(100* mySlider.value) +"%";
     }
 }

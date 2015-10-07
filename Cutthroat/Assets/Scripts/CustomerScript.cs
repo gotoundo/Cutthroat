@@ -274,7 +274,7 @@ public class CustomerScript : MonoBehaviour {
             else
             {
                 debugStringList.Add(targetedStore.gameObject.name + " is charging too much for " + desiredProduct.ToString() + "!");
-                GetComponentInParent<OverheadIconManager>().ShowIcon(AssetManager.singleton.OverheadIcons[4], 1.5f);
+                GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[4], 1.5f);
                 LeaveStore();
                 TryAnotherStore();
             }
@@ -282,7 +282,7 @@ public class CustomerScript : MonoBehaviour {
         else
         {
             debugStringList.Add(targetedStore.gameObject.name + " doesn't have any "+desiredProduct.ToString()+".");
-            GetComponentInParent<OverheadIconManager>().ShowIcon(AssetManager.singleton.OverheadIcons[3], 1.5f);
+            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[3], 1.5f);
             LeaveStore();
             TryAnotherStore();
          }
@@ -305,7 +305,7 @@ public class CustomerScript : MonoBehaviour {
         if (currentWaitTime > maxWaitTime)
         {
             debugStringList.Add("The wait at "+ targetedStore.gameObject.name + " is too long!");
-            GetComponentInParent<OverheadIconManager>().ShowIcon(AssetManager.singleton.OverheadIcons[2], 1.5f);
+            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[2], 1.5f);
             LeaveStore();
             TryAnotherStore();
         }
@@ -326,7 +326,7 @@ public class CustomerScript : MonoBehaviour {
             
             AddFavorability(targetedStore, couldBuyFavorability);
             debugStringList.Add("I was able to buy " + desiredProduct.ToString() + " from " + targetedStore.gameObject.name + "! Time to go home.");
-            GetComponentInParent<OverheadIconManager>().ShowIcon(AssetManager.singleton.OverheadIcons[0], 1.5f);
+            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[0], 1.5f);
             playTime = 2.6f;
             LeaveStore();
             targetHome();
@@ -335,7 +335,7 @@ public class CustomerScript : MonoBehaviour {
         {
             AddFavorability(targetedStore, waitedForNothingFavorability);
             debugStringList.Add(targetedStore.gameObject.name + " ran out of " + desiredProduct.ToString() + "! ");
-            GetComponentInParent<OverheadIconManager>().ShowIcon(AssetManager.singleton.OverheadIcons[3], 1.5f);
+            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[3], 1.5f);
             LeaveStore();
             TryAnotherStore();
         }
@@ -347,14 +347,6 @@ public class CustomerScript : MonoBehaviour {
         if (StoresVisitedToday.Count < StoreAwareness.Count)
         {
             targetStore(PickNextStore(StoresVisitedToday).gameObject);
-            /*GameObject oldTarget = null;
-            if (targetedStore != null)
-                oldTarget = targetedStore.gameObject;
-
-            if (oldTarget != null && oldTarget.GetComponent<StoreBase>() != null)
-                targetStore(PickNextStore(oldTarget.GetComponent<StoreBase>()).gameObject);
-            else
-                targetStore(PickNextStore().gameObject);*/
         }
         else
             currentNumTrips = maxTrips;

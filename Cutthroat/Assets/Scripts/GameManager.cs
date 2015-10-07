@@ -12,40 +12,33 @@ public class GameManager : MonoBehaviour {
 	public static List<CustomerScript> AllCustomers;
 
     public GameObject playerStore;
-    public StoreBase player;
+    public GameObject inspectorPanel;
+    public GameObject SelectedObject;
+    public GameObject WinPanel;
+    public GameObject LosePanel;
+
     public Text playerIngredientDisplay;
     public Text playerGoldDisplay;
 
-    public GameObject inspectorPanel;
-
-    public GameObject SelectedObject;
+    
 
     public Dictionary<Recipe, Dictionary<Ingredient, int>> recipeBook;
 
-    public void MakeSelection(GameObject newSelection)
-    {
-        inspectorPanel.SetActive(true);
+    public StoreBase player;
+    public LevelDefinition CurrentLevel;
+    bool gameRunning;
 
-        if (SelectedObject!=null)
-            SelectedObject.GetComponent<Inspectable>().Deselect();
-
-        newSelection.GetComponent<Inspectable>().Select();
-        SelectedObject = newSelection;
-    }
-
-    public void CloseInspector()
-    {
-        if (SelectedObject != null)
-            SelectedObject.GetComponent<Inspectable>().Deselect();
-        inspectorPanel.SetActive(false);
-    }
-
+    
 
 
 
 	// Use this for initialization
 	void Awake () {
         singleton = this;
+        gameRunning = true;
+        if (CurrentLevel == null)
+            CurrentLevel = new LevelDefinition();
+
         StoreUpgrade.Initialize();
         AllStores = new List<StoreBase>();
 		AllCustomers = new List<CustomerScript> ();
@@ -68,7 +61,6 @@ public class GameManager : MonoBehaviour {
         AudioManager.Main.Source.clip = AudioManager.Main.Music[0];
         AudioManager.Main.Source.Play();
         AudioManager.Main.BarkingDogs = true;
-
     }
 
     // Update is called once per frame
@@ -80,7 +72,37 @@ public class GameManager : MonoBehaviour {
         foreach (Ingredient ingr in player.GetIngredients().Keys)
             playerIngredientDisplay.text += "\n" + ingr.ToString() + ":  " + player.GetIngredients()[ingr];
 
+        if(gameRunning && CurrentLevel.HasWon())
+        {
+            gameRunning = false;
+            WinPanel.SetActive(true);
+
+        }
+        else if (gameRunning && CurrentLevel.HasLost())
+        {
+            gameRunning = false;
+            LosePanel.SetActive(true);
+        }
 
         
     }
+
+    public void MakeSelection(GameObject newSelection)
+    {
+        inspectorPanel.SetActive(true);
+
+        if (SelectedObject != null)
+            SelectedObject.GetComponent<Inspectable>().Deselect();
+
+        newSelection.GetComponent<Inspectable>().Select();
+        SelectedObject = newSelection;
+    }
+
+    public void CloseInspector()
+    {
+        if (SelectedObject != null)
+            SelectedObject.GetComponent<Inspectable>().Deselect();
+        inspectorPanel.SetActive(false);
+    }
+
 }
