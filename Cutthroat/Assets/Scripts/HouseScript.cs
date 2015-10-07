@@ -11,20 +11,26 @@ public class HouseScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        GameManager.AllHouses.Add(this);
         
-        for (int i = 0; i < customersToAHouse; i++)
-        {
-            GameObject o = (GameObject)Instantiate(customer, new Vector3(transform.position.x,-4,transform.position.z), transform.rotation);
-            
-            CustomerScript cust = o.GetComponent<CustomerScript>();
-            cust.home = gameObject;
-        }
-        myCount = count;
-        count++;
+        
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
+
+    public void SpawnCustomers()
+    {
+        for (int i = 0; i < customersToAHouse; i++)
+        {
+            GameObject o = (GameObject)Instantiate(customer, new Vector3(transform.position.x, -4, transform.position.z), transform.rotation);
+
+            CustomerScript cust = o.GetComponent<CustomerScript>();
+            cust.home = gameObject;
+        }
+        myCount = count;
+        count++;
+    }
 }

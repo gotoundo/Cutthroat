@@ -55,11 +55,14 @@ public class IngredientStore : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        remainingCooldown -= Time.deltaTime;
-        if (remainingCooldown <= 0)
+        if (GameManager.singleton.gameRunning)
         {
-            remainingCooldown = MarketRefreshCooldown;
-            RefreshPrices();
+            remainingCooldown -= Time.deltaTime;
+            if (remainingCooldown <= 0)
+            {
+                remainingCooldown = MarketRefreshCooldown;
+                RefreshPrices();
+            }
         }
     }
 

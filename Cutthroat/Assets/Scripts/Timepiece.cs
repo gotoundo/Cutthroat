@@ -5,18 +5,21 @@ using System.Collections;
 public class Timepiece : MonoBehaviour {
 
     Light Daylight;
-    public float timeInDay;
+    float timeInDay;
     float currentTime = 0;
     Slider mySlider;
     public Text dayCountText;
-    float daysubsection = .75f;
+    float daysubsection = 1f;
 
     public static int CurrentDay;
+
+    public static Timepiece Main;
 
 	// Use this for initialization
 
         void Awake()
     {
+        Main = this;
         mySlider = GetComponent<Slider>();
         Daylight = GameObject.FindGameObjectWithTag("Sun").GetComponent<Light>();
         Daylight.transform.Rotate(new Vector3(-360 * daysubsection / 2, 0));
@@ -25,24 +28,27 @@ public class Timepiece : MonoBehaviour {
     }
 
 	void Start () {
-        
-
+        timeInDay = IngredientStore.Main.MarketRefreshCooldown;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        currentTime += Time.deltaTime;
-        if (currentTime >= timeInDay)
+
+        if (GameManager.singleton.gameRunning)
         {
-            currentTime = 0;
-            Daylight.transform.Rotate(new Vector3(360* (1-daysubsection), 0));
-            CurrentDay++;
+            currentTime += Time.deltaTime;
+            if (currentTime >= timeInDay)
+            {
+                currentTime = 0;
+                Daylight.transform.Rotate(new Vector3(360 * (1 - daysubsection), 0));
+                CurrentDay++;
+            }
+
+            mySlider.value = currentTime / timeInDay;
+            dayCountText.text = "" + CurrentDay;
+
+            Daylight.transform.Rotate(new Vector3((360 * daysubsection) * Time.deltaTime / timeInDay, 0));
         }
-
-        mySlider.value = currentTime / timeInDay;
-        dayCountText.text = "" + CurrentDay;
-
-        Daylight.transform.Rotate(new Vector3((360 * daysubsection) * Time.deltaTime / timeInDay, 0));
 	
 	}
 }

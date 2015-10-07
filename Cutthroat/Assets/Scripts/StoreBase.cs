@@ -22,7 +22,7 @@ public class StoreBase : MonoBehaviour
 
     public float productionTimeRemaining = 0f;
 	public float startingFavorability = 0f;
-    bool firstRun = true;
+    //bool firstRun = true;
 
     void Start()
     {
@@ -48,21 +48,18 @@ public class StoreBase : MonoBehaviour
 
     void Update()
     {
-        if (firstRun)
+        if (GameManager.singleton.gameRunning)
         {
-            firstRun = false;
-            addUniversalFavorability(startingFavorability);
-        }
-
-        if (CustomerQueue.Count == 0)
-            productionTimeRemaining = ProductionTime();
-        else
-        {
-            productionTimeRemaining -= Time.deltaTime;
-            if (productionTimeRemaining <= 0)
-            {
+            if (CustomerQueue.Count == 0)
                 productionTimeRemaining = ProductionTime();
-                CustomerQueue[0].AttemptTransaction();
+            else
+            {
+                productionTimeRemaining -= Time.deltaTime;
+                if (productionTimeRemaining <= 0)
+                {
+                    productionTimeRemaining = ProductionTime();
+                    CustomerQueue[0].AttemptTransaction();
+                }
             }
         }
     }
@@ -216,12 +213,12 @@ public class StoreBase : MonoBehaviour
         }
     }
 
-	void addUniversalFavorability(float favorability)
+	/*public void addUniversalFavorability(float favorability)
 	{
 		
 		foreach(CustomerScript customer in GameManager.AllCustomers)
 			customer.AddFavorability(this, favorability);
-	}
+	}*/
 
     // Update is called once per frame
 

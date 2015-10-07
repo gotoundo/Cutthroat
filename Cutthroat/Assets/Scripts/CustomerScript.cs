@@ -67,9 +67,10 @@ public class CustomerScript : MonoBehaviour {
 
     float playTime = 0;
 
-    void Start () {
-		GameManager.AllCustomers.Add (this);
-        gameObject.name = "Customer " + home.GetComponent<HouseScript>().myCount+"-"+myCount;
+    void Start()
+    {
+        GameManager.AllCustomers.Add(this);
+        gameObject.name = "Customer " + home.GetComponent<HouseScript>().myCount + "-" + myCount;
         myCount = count;
         count++;
 
@@ -83,6 +84,9 @@ public class CustomerScript : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         PickNewProduct();
+
+        foreach (StoreBase store in GameManager.AllStores)
+            AddFavorability(store, store.startingFavorability);
     }
 
     // Update is called once per frame

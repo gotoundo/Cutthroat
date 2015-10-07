@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager singleton;
     public static List<StoreBase> AllStores;
 	public static List<CustomerScript> AllCustomers;
+    public static List<HouseScript> AllHouses;
 
     public GameObject playerStore;
     public GameObject inspectorPanel;
@@ -26,7 +27,7 @@ public class GameManager : MonoBehaviour {
 
     public StoreBase player;
     public LevelDefinition CurrentLevel;
-    bool gameRunning;
+    public bool gameRunning;
 
     
 
@@ -35,13 +36,14 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
         singleton = this;
-        gameRunning = true;
+        gameRunning = false;
         if (CurrentLevel == null)
             CurrentLevel = new LevelDefinition();
 
         StoreUpgrade.Initialize();
         AllStores = new List<StoreBase>();
 		AllCustomers = new List<CustomerScript> ();
+        AllHouses = new List<HouseScript>();
         recipeBook = new Dictionary<Recipe, Dictionary<Ingredient, int>>();
         player = playerStore.GetComponent<StoreBase>();
 
@@ -60,8 +62,21 @@ public class GameManager : MonoBehaviour {
     {
         AudioManager.Main.Source.clip = AudioManager.Main.Music[0];
         AudioManager.Main.Source.Play();
-        AudioManager.Main.BarkingDogs = true;
+        
     }
+
+    public void BeginPlay()
+    {
+        gameRunning = true;
+        AudioManager.Main.BarkingDogs = true;
+        foreach (HouseScript house in AllHouses)
+            house.SpawnCustomers();
+
+        
+
+    }
+
+
 
     // Update is called once per frame
     void Update()

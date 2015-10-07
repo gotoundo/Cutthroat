@@ -47,8 +47,8 @@ public class LevelDefinition
     public LevelDefinition()
     {
         Conditions = new List<LevelCondition>();
-        Conditions.Add(new LevelCondition(Result.Win, TriggerFrequency.Continuous, Qualifier.GreaterThan, Metric.PopularityPercent, .3f));
-        Conditions.Add(new LevelCondition(Result.Lose, 1));
+        Conditions.Add(new LevelCondition(Result.Win, TriggerFrequency.Continuous, Qualifier.GreaterThan, Metric.PopularityPercent, .5f));
+        Conditions.Add(new LevelCondition(Result.Lose, 30));
     }
 
     //returns -1 for loss, 0 for not over, and 1 for won
