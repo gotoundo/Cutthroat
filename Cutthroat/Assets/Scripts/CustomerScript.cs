@@ -41,7 +41,7 @@ public class CustomerScript : MonoBehaviour {
 
     const int maxTrips = 3;
     const float maxWaitTime = 10f;
-    const float sleepTime = 5f;
+    const float sleepTime = 8f;
 
     float interactionRange = 10f;
     const float scanRange = 3f;
@@ -109,6 +109,7 @@ public class CustomerScript : MonoBehaviour {
 
         animator.SetFloat("MoveSpeed", agent.velocity.magnitude);
         animator.SetFloat("PlayTime", playTime);
+        
         playTime = Mathf.Max(0, playTime -= Time.deltaTime);
         agent.speed = playTime > 0 ? 0 : defaultMoveSpeed;
         
@@ -142,10 +143,11 @@ public class CustomerScript : MonoBehaviour {
                 break;
 
             case CustomerState.HeadingHome:
-                agent.stoppingDistance = 1f;
-                interactionRange = 2f;
+                agent.stoppingDistance = 2.5f;
+                interactionRange = 6f;
                 if (Vector3.Distance(transform.position, moveTarget.transform.position) < interactionRange)
                 {
+                    
                     debugStringList.Add("Home sweet home!");
                     sleepTimeRemaining = sleepTime;
                     myState = CustomerState.AtHome;
@@ -154,8 +156,19 @@ public class CustomerScript : MonoBehaviour {
 
             case CustomerState.AtHome:
                 sleepTimeRemaining -= Time.deltaTime;
-                if (sleepTimeRemaining <= 0)
+                if (sleepTimeRemaining > 0)
                 {
+                    animator.SetBool("Sleeping", true);
+                    agent.speed = 0;
+                }
+                if (sleepTimeRemaining < 0)
+                {
+                    if(sleepTimeRemaining <= -1)
+                    {
+                        agent.speed = defaultMoveSpeed;
+                        
+                    }
+                    animator.SetBool("Sleeping", false);
                     StoresVisitedToday = new List<StoreBase>();
                     PickNewProduct();
                     targetStore(PickNextStore().gameObject);
