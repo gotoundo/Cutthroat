@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public enum LevelID { None, L1, L2, L3, L4, L5, L6 }
 
+//this baby persists across all scenes
 public class LevelManager : MonoBehaviour {
 
     public static LevelDefinition SelectedLevel;
     public static Dictionary<LevelID, LevelDefinition> LevelDefinitions;
-
     public static LevelManager Main;
-	// Use this for initialization
+
 	void Awake () {
         if (Main == null)
         {
@@ -45,7 +45,6 @@ public class LevelManager : MonoBehaviour {
         workingLevel.WinUnlock = LevelID.L2;
         AddLevel(workingLevel);
 
-
         //Level 2 - The Forest
         workingLevel = new LevelDefinition(LevelID.L2);
         workingLevel.Title = "The Forest";
@@ -55,7 +54,31 @@ public class LevelManager : MonoBehaviour {
         workingLevel.RecipesUsed.Add(Recipe.PassionPotion);
         workingLevel.Conditions.Add(new LevelCondition(Result.Win, TriggerFrequency.Continuous, Qualifier.GreaterThan, Metric.PopularityPercent, .6f));
         workingLevel.Conditions.Add(new LevelCondition(Result.Lose, 25));
-        //unlock
+        workingLevel.WinUnlock = LevelID.L3;
+        AddLevel(workingLevel);
+
+        //Level 3 - Doggerton
+        workingLevel = new LevelDefinition(LevelID.L3);
+        workingLevel.Title = "Doggerton";
+        workingLevel.MainObjectiveDescription = "Get 70% of all market share before 25 days are over to win!";
+        workingLevel.StartingGold = 500;
+        workingLevel.RecipesUsed.Add(Recipe.DreamPowder);
+        workingLevel.RecipesUsed.Add(Recipe.PassionPotion);
+        workingLevel.Conditions.Add(new LevelCondition(Result.Win, TriggerFrequency.Continuous, Qualifier.GreaterThan, Metric.PopularityPercent, .7f));
+        workingLevel.Conditions.Add(new LevelCondition(Result.Lose, 25));
+        workingLevel.WinUnlock = LevelID.L4;
+        AddLevel(workingLevel);
+
+        //Level 4 - Pooch City
+        workingLevel = new LevelDefinition(LevelID.L4);
+        workingLevel.Title = "Pooch City";
+        workingLevel.MainObjectiveDescription = "Get 80% of all market share before 25 days are over to win!";
+        workingLevel.StartingGold = 500;
+        workingLevel.RecipesUsed.Add(Recipe.DreamPowder);
+        workingLevel.RecipesUsed.Add(Recipe.PassionPotion);
+        workingLevel.Conditions.Add(new LevelCondition(Result.Win, TriggerFrequency.Continuous, Qualifier.GreaterThan, Metric.PopularityPercent, .8f));
+        workingLevel.Conditions.Add(new LevelCondition(Result.Lose, 25));
+        workingLevel.WinUnlock = LevelID.L5;
         AddLevel(workingLevel);
     }
 

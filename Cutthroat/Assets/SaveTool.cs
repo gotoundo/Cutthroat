@@ -10,6 +10,7 @@ using System.IO;
 
 public class SaveTool
 {
+    public static int activeSaveFile = 0;
     public static List<SaveData> savedGames = new List<SaveData>();
     const string saveFileName = "/savedGames.gd";
 
@@ -32,7 +33,7 @@ public class SaveTool
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + saveFileName, FileMode.Open);
             SaveTool.savedGames = (List<SaveData>)bf.Deserialize(file);
-            SaveData.current = SaveTool.savedGames.First();
+            SaveData.current = SaveTool.savedGames.ElementAt(activeSaveFile);
             file.Close();
             Debug.Log("Loaded " + Application.persistentDataPath + saveFileName);
         }

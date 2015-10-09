@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public enum Recipe { DreamPowder, PassionPotion }
 
+//this guy is recreated every time we load a level scene
 public class GameManager : MonoBehaviour {
 
     public static GameManager singleton;
