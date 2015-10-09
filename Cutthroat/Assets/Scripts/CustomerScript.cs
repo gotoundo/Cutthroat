@@ -15,6 +15,7 @@ public class CustomerScript : MonoBehaviour {
     StoreBase targetedStore;
     Recipe desiredProduct;
 
+    //public Dictionary<Recipe, float> WeightedDesires;
     public Dictionary<StoreBase, float> StoreFavorability;
     public Dictionary<StoreBase, float> StoreAwareness;
     List<StoreBase> EncounteredStores;
@@ -74,6 +75,7 @@ public class CustomerScript : MonoBehaviour {
         myCount = count;
         count++;
 
+        //WeightedDesires = new Dictionary<Recipe, float>();
         StoreFavorability = new Dictionary<StoreBase, float>();
         StoreAwareness = new Dictionary<StoreBase, float>();
         EncounteredStores = new List<StoreBase>();
@@ -87,6 +89,9 @@ public class CustomerScript : MonoBehaviour {
 
         foreach (StoreBase store in GameManager.AllStores)
             AddFavorability(store, store.startingFavorability);
+
+        //foreach (Recipe recipe in GameManager.singleton.CurrentLevel.RecipesUsed)
+            //WeightedDesires.Add(recipe, 1f);
     }
 
     // Update is called once per frame
@@ -181,7 +186,6 @@ public class CustomerScript : MonoBehaviour {
                 StoreWeights.Add(store, myWeight);
                 totalWeight += myWeight;
             }
-
         }
 
         List<string> debugList = new List<string>();
@@ -278,7 +282,7 @@ public class CustomerScript : MonoBehaviour {
             else
             {
                 debugStringList.Add(targetedStore.gameObject.name + " is charging too much for " + desiredProduct.ToString() + "!");
-                GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[4], 1.5f);
+                GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[4], 1.5f);
                 LeaveStore();
                 TryAnotherStore();
             }
@@ -286,7 +290,7 @@ public class CustomerScript : MonoBehaviour {
         else
         {
             debugStringList.Add(targetedStore.gameObject.name + " doesn't have any "+desiredProduct.ToString()+".");
-            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[3], 1.5f);
+            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[3], 1.5f);
             LeaveStore();
             TryAnotherStore();
          }
@@ -309,7 +313,7 @@ public class CustomerScript : MonoBehaviour {
         if (currentWaitTime > maxWaitTime)
         {
             debugStringList.Add("The wait at "+ targetedStore.gameObject.name + " is too long!");
-            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[2], 1.5f);
+            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[2], 1.5f);
             LeaveStore();
             TryAnotherStore();
         }
@@ -330,7 +334,7 @@ public class CustomerScript : MonoBehaviour {
             
             AddFavorability(targetedStore, couldBuyFavorability);
             debugStringList.Add("I was able to buy " + desiredProduct.ToString() + " from " + targetedStore.gameObject.name + "! Time to go home.");
-            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[0], 1.5f);
+            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.PotionTextures[desiredProduct], 1.5f);
             playTime = 2.6f;
             LeaveStore();
             targetHome();
@@ -339,7 +343,7 @@ public class CustomerScript : MonoBehaviour {
         {
             AddFavorability(targetedStore, waitedForNothingFavorability);
             debugStringList.Add(targetedStore.gameObject.name + " ran out of " + desiredProduct.ToString() + "! ");
-            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[3], 1.5f);
+            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[3], 1.5f);
             LeaveStore();
             TryAnotherStore();
         }
@@ -369,10 +373,6 @@ public class CustomerScript : MonoBehaviour {
 
     private void PickNewProduct()
     {
-        List<Recipe> allRecipes = new List<Recipe>();
-        allRecipes.Add(Recipe.DreamPowder);
-        allRecipes.Add(Recipe.PassionPotion);
-
-        desiredProduct = allRecipes[Random.Range(0, allRecipes.Count)];
+        desiredProduct = Zeitgeist.RecipePopularities.RollRandomItem();
     }
 }

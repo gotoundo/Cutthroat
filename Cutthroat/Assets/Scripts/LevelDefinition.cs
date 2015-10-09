@@ -12,7 +12,7 @@ public enum Metric { Gold, PopularityPercent, None }
 
 public class LevelCondition
 {
-    
+     
 
     public Result result;
     public TriggerFrequency trigger;
@@ -43,12 +43,32 @@ public class LevelCondition
 public class LevelDefinition
 {
     public List<LevelCondition> Conditions;
+    public List<Recipe> RecipesUsed;
+
+    public Dictionary<Ingredient, int> StartingIngredients;
+    public int StartingGold;
+
+    public int startingIngredientQuantities = 10;
 
     public LevelDefinition()
     {
         Conditions = new List<LevelCondition>();
         Conditions.Add(new LevelCondition(Result.Win, TriggerFrequency.Continuous, Qualifier.GreaterThan, Metric.PopularityPercent, .5f));
         Conditions.Add(new LevelCondition(Result.Lose, 30));
+
+        RecipesUsed = new List<Recipe>();
+        RecipesUsed.Add(Recipe.DreamPowder);
+        RecipesUsed.Add(Recipe.PassionPotion);
+
+        StartingIngredients = new Dictionary<Ingredient, int>();
+        
+        foreach (Recipe recipe in RecipesUsed)
+            foreach (Ingredient ingredient in GameManager.RecipeBook[recipe].Keys)
+                if (!StartingIngredients.ContainsKey(ingredient))
+                    StartingIngredients.Add(ingredient, startingIngredientQuantities);
+
+
+        StartingGold = 500;
     }
 
     //returns -1 for loss, 0 for not over, and 1 for won

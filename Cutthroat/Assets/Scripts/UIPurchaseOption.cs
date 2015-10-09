@@ -10,18 +10,22 @@ public class UIPurchaseOption : MonoBehaviour {
     public Text ItemName;
     public Text ItemCost;
     public Button[] purchaseButton;
+    public Image gemIcon;
     StoreBase player;
 
     // Use this for initialization
     void Start () {
-        ItemName.text = ItemSold.ToString();
+        
+        gemIcon.overrideSprite = TextureManager.IngredientTextures[ItemSold];
     }
 	
 	// Update is called once per frame
 	void Update () {
         if(player == null)
             player = GameManager.singleton.player;
-        
+
+        ItemName.text = ItemSold.ToString() + " (x"+player.GetIngredients()[ItemSold]+")";
+
         for (int i = 0; i < purchaseButton.Length; i++)
         {
             int quantity = purchaseButton[i].GetComponent<ButtonQuantity>().Quantity;

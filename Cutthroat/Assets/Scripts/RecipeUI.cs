@@ -1,35 +1,60 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class RecipeUI : MonoBehaviour {
 
     public Text Price;
     public Text Name;
-    public Text Ingredients;
+    //public Text Ingredients;
     public Recipe myRecipe;
-    public Slider progressSlider;
+    public Slider PriceSlider;
+    public GameObject IngredientsRequired;
+    public GameObject IngredientQuantityWidget;
+    public Image RecipeIcon;
     StoreBase player;
     // Use this for initialization
+    static int x = 0;
+
+    void Awake()
+    {
+
+    }
+
     void Start () {
-	
-	}
+
+        
+        x++;
+        Name.text = myRecipe.ToString();
+
+        RecipeIcon.overrideSprite = TextureManager.PotionTextures[myRecipe];
+
+        List<Ingredient>  StartingList = new List<Ingredient>(GameManager.RecipeBook[myRecipe].Keys);
+        List<Ingredient> EndingList = new List<Ingredient>();
+        foreach (Ingredient ingr in StartingList)
+        {
+            Debug.Log(gameObject.name + myRecipe.ToString()+ingr.ToString());
+            EndingList.Add(ingr);
+                GameObject ingredientCount = Instantiate(IngredientQuantityWidget);
+                ingredientCount.name = myRecipe.ToString() + " " + ingr.ToString();
+                ingredientCount.transform.SetParent(IngredientsRequired.transform);
+                ingredientCount.GetComponentInChildren<Image>().overrideSprite = TextureManager.IngredientTextures[ingr];
+                ingredientCount.GetComponentInChildren<Text>().text = "(x" + GameManager.RecipeBook[myRecipe][ingr] + ")";
+        }
+
+        PriceSlider.maxValue = IngredientStore.AverageRecipeCost(myRecipe) * 3;
+        PriceSlider.value = IngredientStore.AverageRecipeCost(myRecipe) * 1.2f;
+    }
 	
 	// Update is called once per frame
 	void Update () {
         if (player == null)
             player = GameManager.singleton.player;
 
-        Name.text = myRecipe.ToString();
-        Price.text = ""+player.ProductCost(myRecipe);
-        Ingredients.text = "";
-        foreach(Ingredient ingr in GameManager.singleton.recipeBook[myRecipe].Keys)
-        {
-            if (!Ingredients.text.Equals(""))
-                Ingredients.text += "\n";
-            Ingredients.text += ingr.ToString() + " " + GameManager.singleton.recipeBook[myRecipe][ingr];
-        }
-
+        
+        player.SetPrice(myRecipe, Mathf.RoundToInt(PriceSlider.value));
+        Price.text = "$"+player.ProductCost(myRecipe);
     }
 
     public void ModifyPrice(int amount = 1)

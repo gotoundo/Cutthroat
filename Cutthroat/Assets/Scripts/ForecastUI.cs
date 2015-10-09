@@ -18,6 +18,10 @@ public class ForecastUI : MonoBehaviour {
         {
             DebugText.text += entry.Key.ToString() + " will cost " + entry.Value +"\n";
         }
+        foreach(Recipe recipe in Zeitgeist.NextRecipePopularities.KeyList())
+        {
+            DebugText.text += recipe.ToString() + " will have popularity of " + Zeitgeist.RecipePopularities.ChanceOfItem(recipe,true) + "%\n";
+        }
        // DebugText.text
 
     }

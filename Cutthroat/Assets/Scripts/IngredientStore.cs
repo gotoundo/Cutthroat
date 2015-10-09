@@ -21,15 +21,15 @@ public class IngredientStore : MonoBehaviour {
     {
         int cost = 0;
 
-        foreach (Ingredient ingr in GameManager.singleton.recipeBook[recipe].Keys)
-            cost += DefaultIngredientPrices[ingr] * GameManager.singleton.recipeBook[recipe][ingr];
+        foreach (Ingredient ingr in GameManager.RecipeBook[recipe].Keys)
+            cost += DefaultIngredientPrices[ingr] * GameManager.RecipeBook[recipe][ingr];
 
         return cost;
     }
+    
 
-
-    // Use this for initialization
-    void Awake () {
+    public void Initialize()
+    {
         Main = this;
         remainingCooldown = 0;
         NextIngredientPrices = new Dictionary<Ingredient, int>();
@@ -41,7 +41,13 @@ public class IngredientStore : MonoBehaviour {
         DefaultIngredientPrices.Add(Ingredient.Emerald, 10);
         DefaultIngredientPrices.Add(Ingredient.Topaz, 5);
 
-        foreach(Ingredient ingr in DefaultIngredientPrices.Keys)
+      /*  List<Ingredient> ingredientsUsed = new List<Ingredient>();
+        foreach (Recipe recipe in GameManager.singleton.CurrentLevel.RecipesUsed)
+            foreach (Ingredient ingredient in GameManager.recipeBook[recipe].Keys)
+                if (!ingredientsUsed.Contains(ingredient))
+                    ingredientsUsed.Add(ingredient);*/
+
+        foreach (Ingredient ingr in GameManager.singleton.CurrentLevel.StartingIngredients.Keys)
         {
             CurrentIngredientPrices.Add(ingr, DefaultIngredientPrices[ingr]);
             NextIngredientPrices.Add(ingr, DefaultIngredientPrices[ingr]);
@@ -49,6 +55,20 @@ public class IngredientStore : MonoBehaviour {
 
         RefreshPrices();
         RefreshPrices();
+    }
+
+    // Use this for initialization
+    void Awake () {
+        
+
+        
+
+    }
+
+    void Start()
+    {
+
+        
 
     }
 

@@ -33,13 +33,13 @@ public class StoreBase : MonoBehaviour
         myUpgrades = new Dictionary<StoreUpgrade.Type, int>();
         CustomerQueue = new List<CustomerScript>();
 
-        myIngredients.Add(Ingredient.Ruby, 10);
-        myIngredients.Add(Ingredient.Emerald, 10);
-        myIngredients.Add(Ingredient.Topaz, 10);
-        myIngredients.Add(Ingredient.Sapphire, 10);
+        foreach(KeyValuePair<Ingredient,int> pair in GameManager.singleton.CurrentLevel.StartingIngredients)
+            myIngredients.Add(pair.Key, pair.Value);
 
-        myProducts.Add(Recipe.DreamPowder, Mathf.RoundToInt(IngredientStore.AverageRecipeCost(Recipe.DreamPowder)* startingMargin));
-        myProducts.Add(Recipe.PassionPotion, Mathf.RoundToInt(IngredientStore.AverageRecipeCost(Recipe.PassionPotion)* startingMargin));
+        foreach(Recipe recipe in GameManager.singleton.CurrentLevel.RecipesUsed)
+            myProducts.Add(recipe, Mathf.RoundToInt(IngredientStore.AverageRecipeCost(recipe) * startingMargin));
+
+        Gold = GameManager.singleton.CurrentLevel.StartingGold;
 
         myUpgrades.Add(StoreUpgrade.Type.Amenities, 0);
         myUpgrades.Add(StoreUpgrade.Type.ProductionSpeed, 0);
@@ -152,6 +152,14 @@ public class StoreBase : MonoBehaviour
         }
     }
 
+    public void SetPrice(Recipe product, int i)
+    {
+        if (SellsProduct(product))
+        {
+            myProducts[product] = i;
+        }
+    }
+
     public bool TryBuyProduct(Recipe product)
     {
         bool success = false;
@@ -162,7 +170,7 @@ public class StoreBase : MonoBehaviour
             success = true;
             if (!Robot)
             {
-                GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.singleton.OverheadIcons[1], 1f);
+                GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[1], 1f);
                 AudioManager.Main.Source.PlayOneShot(AudioManager.Main.SaleMade,0.3f);
             }
         }
@@ -187,9 +195,9 @@ public class StoreBase : MonoBehaviour
             return false;
         
         bool canMakeIt = true;
-        foreach (Ingredient ingr in GameManager.singleton.recipeBook[product].Keys)
+        foreach (Ingredient ingr in GameManager.RecipeBook[product].Keys)
         {
-            int ingredientDeficit = GameManager.singleton.recipeBook[product][ingr] - myIngredients[ingr];
+            int ingredientDeficit = GameManager.RecipeBook[product][ingr] - myIngredients[ingr];
             if (Robot && ingredientDeficit > 0)
             {
                 TryBuyIngredients(ingr, ingredientDeficit);
@@ -199,7 +207,7 @@ public class StoreBase : MonoBehaviour
                     Debug.Log(gameObject.name + " couldn't buy " + ingredientDeficit + " " + ingr.ToString());*/
             }
 
-            if (myIngredients[ingr] < GameManager.singleton.recipeBook[product][ingr])
+            if (myIngredients[ingr] < GameManager.RecipeBook[product][ingr])
                 canMakeIt = false;
         }
         return canMakeIt;
@@ -207,9 +215,9 @@ public class StoreBase : MonoBehaviour
 
     void MakeProduct(Recipe product)
     {
-        foreach (Ingredient ingr in GameManager.singleton.recipeBook[product].Keys)
+        foreach (Ingredient ingr in GameManager.RecipeBook[product].Keys)
         {
-            myIngredients[ingr] -= GameManager.singleton.recipeBook[product][ingr];
+            myIngredients[ingr] -= GameManager.RecipeBook[product][ingr];
         }
     }
 

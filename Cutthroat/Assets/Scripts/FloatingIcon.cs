@@ -13,8 +13,13 @@ public class FloatingIcon : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (Target != null)
-        {
+
+        SnapToPosition();
+    }
+
+    public void SnapToPosition()
+    {
+        if (Target != null) {
             Vector3 wantedPos = Camera.main.WorldToScreenPoint(Target.position) + Offset;
             transform.position = wantedPos;
         }

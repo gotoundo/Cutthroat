@@ -52,6 +52,7 @@ public class OverheadIconManager : MonoBehaviour {
         myOverheadImage.overrideSprite = sprite;
         remainingTime = duration;
         icon.Offset = new Vector3(Offset.x, Offset.y, Offset.z);
+        icon.SnapToPosition();
        
 
     }

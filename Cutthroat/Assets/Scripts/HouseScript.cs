@@ -12,8 +12,6 @@ public class HouseScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         GameManager.AllHouses.Add(this);
-        
-        
 	}
 	
 	// Update is called once per frame

@@ -5,7 +5,11 @@ public class RandomPuppySkin : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        GetComponentInChildren<SkinnedMeshRenderer>().material = MaterialManager.Main.PuppySkins[Random.Range(0, MaterialManager.Main.PuppySkins.Length)];
+
+        int puppyID = Random.Range(0, MaterialManager.Main.PuppySkins.Length);
+
+        GetComponentInChildren<SkinnedMeshRenderer>().material = MaterialManager.Main.PuppySkins[puppyID];
+        GetComponent<Animator>().avatar = AvatarManager.Main.PuppyAvatars[puppyID];
 	
 	}
 	
