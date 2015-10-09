@@ -3,45 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-//contains information on starting player
-
-public enum Result { Win, Lose }
-public enum TriggerFrequency { Timed, Continuous }
-public enum Qualifier { LessThan, GreaterThan, None }
-public enum Metric { Gold, PopularityPercent, None }
-
-public class LevelCondition
-{
-     
-
-    public Result result;
-    public TriggerFrequency trigger;
-    public Qualifier qualifier;
-    public Metric metric;
-    public float amount;
-    public int deadline;
-
-    public LevelCondition(Result result, TriggerFrequency trigger, Qualifier qualifier, Metric metric, float amount, int deadline = int.MaxValue)
-    {
-        this.result = result;
-        this.trigger = trigger;
-        this.qualifier = qualifier;
-        this.metric = metric;
-        this.amount = amount;
-        this.deadline = deadline;
-    }
-
-    public LevelCondition(Result result, int deadline) : this(result,TriggerFrequency.Timed, Qualifier.None,Metric.None,0,deadline)
-    { }
-
-    public int ifPassedResult()
-    {
-        return result == Result.Win ? 1 : -1;
-    }
-}
-
 public class LevelDefinition
 {
+    public LevelID myID = LevelID.None;
+    public LevelID WinUnlock = LevelID.None;
+    public string Title = "default title";
+    public string MainObjectiveDescription = "default objective description";
+
+    public string Scene = "MainScene";
     public List<LevelCondition> Conditions;
     public List<Recipe> RecipesUsed;
 
@@ -50,25 +19,26 @@ public class LevelDefinition
 
     public int startingIngredientQuantities = 10;
 
-    public LevelDefinition()
+    public LevelDefinition(LevelID myID,  bool testLevel = false)
     {
+        this.myID = myID;
         Conditions = new List<LevelCondition>();
-        Conditions.Add(new LevelCondition(Result.Win, TriggerFrequency.Continuous, Qualifier.GreaterThan, Metric.PopularityPercent, .5f));
-        Conditions.Add(new LevelCondition(Result.Lose, 30));
-
         RecipesUsed = new List<Recipe>();
-        RecipesUsed.Add(Recipe.DreamPowder);
-        RecipesUsed.Add(Recipe.PassionPotion);
-
         StartingIngredients = new Dictionary<Ingredient, int>();
-        
+
+        if (testLevel)
+            RecipesUsed.Add(Recipe.DreamPowder);
+    }
+
+    public void FinishLevel()
+    {
+        if(GameManager.RecipeBook == null)
+            GameManager.LoadRecipes();
+
         foreach (Recipe recipe in RecipesUsed)
             foreach (Ingredient ingredient in GameManager.RecipeBook[recipe].Keys)
                 if (!StartingIngredients.ContainsKey(ingredient))
                     StartingIngredients.Add(ingredient, startingIngredientQuantities);
-
-
-        StartingGold = 500;
     }
 
     //returns -1 for loss, 0 for not over, and 1 for won
@@ -106,11 +76,3 @@ public class LevelDefinition
         return CheckGameOver() == -1;
     }
 }
-
-public class StoreDefinition
-{
-
-
-
-}
-

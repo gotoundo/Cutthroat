@@ -29,9 +29,12 @@ public class GameManager : MonoBehaviour {
     public LevelDefinition CurrentLevel;
     public bool gameRunning;
 
-    
-	// Use this for initialization
-	void Awake () {
+    public bool autoWin = false;
+    public bool autoLose = false;
+
+
+    // Use this for initialization
+    void Awake () {
         AllStores = new List<StoreBase>();
         AllCustomers = new List<CustomerScript>();
         AllHouses = new List<HouseScript>();
@@ -41,15 +44,15 @@ public class GameManager : MonoBehaviour {
 
         singleton = this;
         gameRunning = false;
-        if (CurrentLevel == null)
-            CurrentLevel = new LevelDefinition();
+
+        CurrentLevel = LevelManager.SelectedLevel != null ? LevelManager.SelectedLevel : new LevelDefinition(LevelID.None);
 
         Zeitgeist.Initialize(CurrentLevel);
         StoreUpgrade.Initialize();
         GetComponent<IngredientStore>().Initialize();
     }
 
-    void LoadRecipes()
+    public static void LoadRecipes()
     {
         RecipeBook = new Dictionary<Recipe, Dictionary<Ingredient, int>>();
 
@@ -92,13 +95,13 @@ public class GameManager : MonoBehaviour {
         foreach (Ingredient ingr in player.GetIngredients().Keys)
             playerIngredientDisplay.text += "\n" + ingr.ToString() + ":  " + player.GetIngredients()[ingr];
 
-        if(gameRunning && CurrentLevel.HasWon())
+        if(autoWin || gameRunning && CurrentLevel.HasWon())
         {
             gameRunning = false;
             WinPanel.SetActive(true);
-
+            SaveData.VictoryUnlock(CurrentLevel.WinUnlock);
         }
-        else if (gameRunning && CurrentLevel.HasLost())
+        else if (autoLose || gameRunning && CurrentLevel.HasLost())
         {
             gameRunning = false;
             LosePanel.SetActive(true);

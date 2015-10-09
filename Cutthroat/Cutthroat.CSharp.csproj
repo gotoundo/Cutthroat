@@ -69,10 +69,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AvatarManager.cs" />
+    <Compile Include="Assets\CheatWinLoseUI.cs" />
     <Compile Include="Assets\Fantasy Gui Pack\Demo\Scripts\CoolDown.cs" />
     <Compile Include="Assets\Fantasy Gui Pack\Demo\Scripts\SelectDifficulty.cs" />
     <Compile Include="Assets\IngredientsTabUI.cs" />
+    <Compile Include="Assets\IntroPanelUI.cs" />
+    <Compile Include="Assets\LevelCondition.cs" />
+    <Compile Include="Assets\LevelManager.cs" />
+    <Compile Include="Assets\MainMenuButtonUI.cs" />
+    <Compile Include="Assets\OpenOptionsButtonUI.cs" />
     <Compile Include="Assets\ProductsPaneUI.cs" />
+    <Compile Include="Assets\SaveLoadUI.cs" />
+    <Compile Include="Assets\SaveTool.cs" />
     <Compile Include="Assets\Scripts\AssetManager.cs" />
     <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\ButtonQuantity.cs" />

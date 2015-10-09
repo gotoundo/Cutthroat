@@ -39,13 +39,13 @@ public class UIPurchaseOption : MonoBehaviour {
         if (GameManager.singleton.gameRunning)
         {
 
-            if (IngredientStore.CurrentIngredientPrices[ItemSold] > IngredientStore.DefaultIngredientPrices[ItemSold] * 1.3)
+            if (IngredientStore.CurrentIngredientPrices[ItemSold] > IngredientStore.DefaultIngredientPrices[ItemSold] * 1.25)
             {
                 MarketIndicator.gameObject.SetActive(true);
                 MarketIndicator.color = Color.red;
                 MarketIndicator.text = "Yikes!";
             }
-            else if (IngredientStore.CurrentIngredientPrices[ItemSold] < IngredientStore.DefaultIngredientPrices[ItemSold] * .7f)
+            else if (IngredientStore.CurrentIngredientPrices[ItemSold] < IngredientStore.DefaultIngredientPrices[ItemSold] * .75f)
             {
                 MarketIndicator.gameObject.SetActive(true);
                 MarketIndicator.color = Color.green;
