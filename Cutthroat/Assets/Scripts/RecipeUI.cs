@@ -26,7 +26,7 @@ public class RecipeUI : MonoBehaviour {
 
         
         x++;
-        Name.text = myRecipe.ToString();
+        Name.text = GameManager.RecipeNames[myRecipe];
 
         RecipeIcon.overrideSprite = TextureManager.PotionTextures[myRecipe];
 
@@ -40,7 +40,7 @@ public class RecipeUI : MonoBehaviour {
                 ingredientCount.name = myRecipe.ToString() + " " + ingr.ToString();
                 ingredientCount.transform.SetParent(IngredientsRequired.transform);
                 ingredientCount.GetComponentInChildren<Image>().overrideSprite = TextureManager.IngredientTextures[ingr];
-                ingredientCount.GetComponentInChildren<Text>().text = "(x" + GameManager.RecipeBook[myRecipe][ingr] + ")";
+                ingredientCount.GetComponentInChildren<Text>().text = "x" + GameManager.RecipeBook[myRecipe][ingr] + "";
         }
 
         PriceSlider.maxValue = IngredientStore.AverageRecipeCost(myRecipe) * 3;

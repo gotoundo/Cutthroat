@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour {
     public static Dictionary<LevelID, LevelDefinition> LevelDefinitions;
     public static LevelManager Main;
 
+
 	void Awake () {
         if (Main == null)
         {
@@ -26,9 +27,15 @@ public class LevelManager : MonoBehaviour {
     {
         Main = this;
         LevelDefinitions = new Dictionary<LevelID, LevelDefinition>();
+        
+        if(!SaveTool.Load())
+        {
+            SaveData.current = new SaveData();
+            SaveData.current.UnlockedLevels.Add(LevelID.L1);
+            SaveTool.Save();
+        }
 
-        SaveData.current = new SaveData();
-        SaveData.current.UnlockedLevels.Add(LevelID.L1);
+
         LoadLevelData();
     }
 
@@ -62,7 +69,7 @@ public class LevelManager : MonoBehaviour {
         workingLevel.Title = "Doggerton";
         workingLevel.MainObjectiveDescription = "Get 70% of all market share before 25 days are over to win!";
         workingLevel.StartingGold = 500;
-        workingLevel.RecipesUsed.Add(Recipe.DreamPowder);
+        workingLevel.RecipesUsed.Add(Recipe.QuickElixer);
         workingLevel.RecipesUsed.Add(Recipe.PassionPotion);
         workingLevel.Conditions.Add(new LevelCondition(Result.Win, TriggerFrequency.Continuous, Qualifier.GreaterThan, Metric.PopularityPercent, .7f));
         workingLevel.Conditions.Add(new LevelCondition(Result.Lose, 25));
@@ -74,6 +81,7 @@ public class LevelManager : MonoBehaviour {
         workingLevel.Title = "Pooch City";
         workingLevel.MainObjectiveDescription = "Get 80% of all market share before 25 days are over to win!";
         workingLevel.StartingGold = 500;
+        workingLevel.RecipesUsed.Add(Recipe.QuickElixer);
         workingLevel.RecipesUsed.Add(Recipe.DreamPowder);
         workingLevel.RecipesUsed.Add(Recipe.PassionPotion);
         workingLevel.Conditions.Add(new LevelCondition(Result.Win, TriggerFrequency.Continuous, Qualifier.GreaterThan, Metric.PopularityPercent, .8f));
@@ -92,4 +100,9 @@ public class LevelManager : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    void OnApplicationQuit()
+    {
+        SaveTool.Save();
+    }
 }

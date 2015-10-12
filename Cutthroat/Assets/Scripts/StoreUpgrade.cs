@@ -11,17 +11,21 @@ public class StoreUpgrade
     public enum Type { Storefront, ProductionSpeed, Amenities };
     public static Dictionary<Type, StoreUpgrade> Definitions;
 
+
     public static void Initialize()
     {
         Definitions = new Dictionary<Type, StoreUpgrade>();
-        Definitions.Add(Type.Storefront, new StoreUpgrade(numberOfLevels));
-        Definitions.Add(Type.ProductionSpeed, new StoreUpgrade(numberOfLevels));
-        Definitions.Add(Type.Amenities, new StoreUpgrade(numberOfLevels));
+        Definitions.Add(Type.Storefront, new StoreUpgrade("Storefront", numberOfLevels));
+        Definitions.Add(Type.ProductionSpeed, new StoreUpgrade("Production Speed", numberOfLevels));
+        Definitions.Add(Type.Amenities, new StoreUpgrade("Amenities", numberOfLevels));
     }
 
+    public string Name;
+
     public UpgradeLevel[] Levels;
-    public StoreUpgrade(int levels)
+    public StoreUpgrade(string Name, int levels)
     {
+        this.Name = Name;
         Levels = new UpgradeLevel[levels];
         for (int i = 0; i < Levels.Length; i++)
         {

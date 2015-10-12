@@ -13,7 +13,7 @@ public class UpgradeUI : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Name.text = UpgradeType.ToString();
+        Name.text = StoreUpgrade.Definitions[UpgradeType].Name;
 
     }
 

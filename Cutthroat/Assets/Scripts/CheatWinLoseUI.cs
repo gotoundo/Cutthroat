@@ -23,4 +23,12 @@ public class CheatWinLoseUI : MonoBehaviour {
         if (GameManager.singleton != null)
             GameManager.singleton.autoLose = true;
     }
+
+    public void EraseData()
+    {
+        SaveData.current = new SaveData();
+        SaveData.current.UnlockedLevels.Add(LevelID.L1);
+        SaveTool.Save();
+       // Application.LoadLevel("IntroScene");
+    }
 }

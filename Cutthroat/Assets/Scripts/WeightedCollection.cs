@@ -85,7 +85,7 @@ public class WeightedCollection<TKey>
                 return item;
         }
 
-        throw new System.Exception("Error rolling for item in this weighted collection: "+Collection.ToString());
+        throw new System.Exception("Error rolling for item in this weighted collection "+"(Size"+ Collection.Count+") :" +Collection.ToString());
     }
 
 }

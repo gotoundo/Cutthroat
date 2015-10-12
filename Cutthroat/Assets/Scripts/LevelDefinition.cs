@@ -27,7 +27,10 @@ public class LevelDefinition
         StartingIngredients = new Dictionary<Ingredient, int>();
 
         if (testLevel)
+        {
             RecipesUsed.Add(Recipe.DreamPowder);
+            FinishLevel();
+        }
     }
 
     public void FinishLevel()

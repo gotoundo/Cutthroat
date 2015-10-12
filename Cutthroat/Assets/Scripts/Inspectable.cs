@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Collections;
 
 public class Inspectable : MonoBehaviour {
@@ -16,8 +17,10 @@ public class Inspectable : MonoBehaviour {
 
     public void Select()
     {
-        if (IndicatorObject != null)
-            IndicatorObject.SetActive(true);
+        
+            if (IndicatorObject != null)
+                IndicatorObject.SetActive(true);
+        
         //GetComponent<Renderer>().material.color = selectionColor;
     }
 
@@ -40,9 +43,11 @@ public class Inspectable : MonoBehaviour {
         /*screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
         offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
         destroyBalls = true;*/
+
+
         if (deselectionObject)
             GameManager.singleton.CloseInspector();
-        else
+        else if (!EventSystem.current.IsPointerOverGameObject())
             GameManager.singleton.MakeSelection(gameObject);
     }
 }

@@ -71,7 +71,7 @@ public class CustomerScript : MonoBehaviour {
     void Start()
     {
         GameManager.AllCustomers.Add(this);
-        gameObject.name = "Customer " + home.GetComponent<HouseScript>().myCount + "-" + myCount;
+        gameObject.name = PuppyNames.AllNames[Random.Range(0, PuppyNames.AllNames.Length)];
         myCount = count;
         count++;
 
@@ -89,6 +89,8 @@ public class CustomerScript : MonoBehaviour {
 
         foreach (StoreBase store in GameManager.AllStores)
             AddFavorability(store, store.startingFavorability);
+
+        
 
         //foreach (Recipe recipe in GameManager.singleton.CurrentLevel.RecipesUsed)
             //WeightedDesires.Add(recipe, 1f);

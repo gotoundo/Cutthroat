@@ -68,22 +68,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AvatarManager.cs" />
-    <Compile Include="Assets\CheatWinLoseUI.cs" />
     <Compile Include="Assets\Fantasy Gui Pack\Demo\Scripts\CoolDown.cs" />
     <Compile Include="Assets\Fantasy Gui Pack\Demo\Scripts\SelectDifficulty.cs" />
-    <Compile Include="Assets\IngredientsTabUI.cs" />
-    <Compile Include="Assets\IntroPanelUI.cs" />
-    <Compile Include="Assets\LevelCondition.cs" />
-    <Compile Include="Assets\LevelManager.cs" />
-    <Compile Include="Assets\MainMenuButtonUI.cs" />
-    <Compile Include="Assets\OpenOptionsButtonUI.cs" />
-    <Compile Include="Assets\ProductsPaneUI.cs" />
-    <Compile Include="Assets\SaveLoadUI.cs" />
-    <Compile Include="Assets\SaveTool.cs" />
     <Compile Include="Assets\Scripts\AssetManager.cs" />
     <Compile Include="Assets\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\AvatarManager.cs" />
     <Compile Include="Assets\Scripts\ButtonQuantity.cs" />
+    <Compile Include="Assets\Scripts\CheatWinLoseUI.cs" />
     <Compile Include="Assets\Scripts\CustomerScript.cs" />
     <Compile Include="Assets\Scripts\Draggable.cs" />
     <Compile Include="Assets\Scripts\FloatingIcon.cs" />
@@ -92,20 +83,30 @@
     <Compile Include="Assets\Scripts\HouseScript.cs" />
     <Compile Include="Assets\Scripts\IngredientStore.cs" />
     <Compile Include="Assets\Scripts\Ingredients.cs" />
+    <Compile Include="Assets\Scripts\IngredientsTabUI.cs" />
     <Compile Include="Assets\Scripts\Inspectable.cs" />
     <Compile Include="Assets\Scripts\InspectorUI.cs" />
+    <Compile Include="Assets\Scripts\IntroPanelUI.cs" />
+    <Compile Include="Assets\Scripts\LevelCondition.cs" />
     <Compile Include="Assets\Scripts\LevelDefinition.cs" />
     <Compile Include="Assets\Scripts\LevelLoadButton.cs" />
+    <Compile Include="Assets\Scripts\LevelManager.cs" />
+    <Compile Include="Assets\Scripts\MainMenuButtonUI.cs" />
     <Compile Include="Assets\Scripts\MainMenuManager.cs" />
     <Compile Include="Assets\Scripts\MarketCountdownUI.cs" />
     <Compile Include="Assets\Scripts\MarketUI.cs" />
     <Compile Include="Assets\Scripts\MarketingUI.cs" />
     <Compile Include="Assets\Scripts\MaterialManager.cs" />
+    <Compile Include="Assets\Scripts\OpenOptionsButtonUI.cs" />
     <Compile Include="Assets\Scripts\OverheadIconManager.cs" />
     <Compile Include="Assets\Scripts\PopularityPanelUI.cs" />
+    <Compile Include="Assets\Scripts\ProductsPaneUI.cs" />
     <Compile Include="Assets\Scripts\ProgressPanel.cs" />
+    <Compile Include="Assets\Scripts\PuppyNames.cs" />
     <Compile Include="Assets\Scripts\RandomPuppySkin.cs" />
     <Compile Include="Assets\Scripts\RecipeUI.cs" />
+    <Compile Include="Assets\Scripts\SaveLoadUI.cs" />
+    <Compile Include="Assets\Scripts\SaveTool.cs" />
     <Compile Include="Assets\Scripts\StoreBase.cs" />
     <Compile Include="Assets\Scripts\StoreUpgrade.cs" />
     <Compile Include="Assets\Scripts\TabManager.cs" />
@@ -115,8 +116,8 @@
     <Compile Include="Assets\Scripts\TreeRandomize.cs" />
     <Compile Include="Assets\Scripts\UIPurchaseOption.cs" />
     <Compile Include="Assets\Scripts\UpgradeUI.cs" />
-    <Compile Include="Assets\WeightedCollection.cs" />
-    <Compile Include="Assets\Zeitgeist.cs" />
+    <Compile Include="Assets\Scripts\WeightedCollection.cs" />
+    <Compile Include="Assets\Scripts\Zeitgeist.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Lowpoly Township Set\Readme.txt" />

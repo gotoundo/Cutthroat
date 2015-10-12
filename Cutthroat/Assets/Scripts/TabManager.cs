@@ -10,6 +10,9 @@ public class TabManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        foreach (GameObject tab in Panels)
+            Switch(tab);
+
         Switch(Panels[0]);
 	
 	}
@@ -21,12 +24,7 @@ public class TabManager : MonoBehaviour {
 
     public void Switch(GameObject chosenPanel)
     {
-        Background.transform.SetAsLastSibling();
         foreach (GameObject o in Panels)
-        {
             o.SetActive(o.Equals(chosenPanel));
-            if (o.Equals(chosenPanel))
-                o.transform.parent.SetAsLastSibling();
-        }
     }
 }
