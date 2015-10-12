@@ -39,7 +39,7 @@ public class LevelDefinition
             GameManager.LoadRecipes();
 
         foreach (Recipe recipe in RecipesUsed)
-            foreach (Ingredient ingredient in GameManager.RecipeBook[recipe].Keys)
+            foreach (Ingredient ingredient in GameManager.RecipeBook[recipe].Ingredients.Keys)
                 if (!StartingIngredients.ContainsKey(ingredient))
                     StartingIngredients.Add(ingredient, startingIngredientQuantities);
     }

@@ -5,6 +5,21 @@ using System.Collections.Generic;
 
 public enum Recipe { DreamPowder, PassionPotion, QuickElixer }
 
+public class RecipeDescription
+{
+    public string Name;
+    public string Description;
+    public Recipe Type;
+    public int SpriteID;
+    public Dictionary<Ingredient, int> Ingredients;
+    public RecipeDescription(Recipe Type, string Name, int SpriteID)
+    {
+        Ingredients = new Dictionary<Ingredient, int>();
+        this.Type = Type;
+        GameManager.RecipeBook.Add(Type, this);
+    }
+}
+
 //this guy is recreated every time we load a level scene
 public class GameManager : MonoBehaviour {
 
@@ -23,8 +38,8 @@ public class GameManager : MonoBehaviour {
     public Text playerIngredientDisplay;
     public Text playerGoldDisplay;
 
-    public static Dictionary<Recipe, Dictionary<Ingredient, int>> RecipeBook;
-    public static Dictionary<Recipe, string> RecipeNames;
+    public static Dictionary<Recipe, RecipeDescription> RecipeBook;
+   // public static Dictionary<Recipe, string> RecipeNames;
     
     public StoreBase player;
     public LevelDefinition CurrentLevel;
@@ -54,26 +69,23 @@ public class GameManager : MonoBehaviour {
 
     public static void LoadRecipes()
     {
-        RecipeBook = new Dictionary<Recipe, Dictionary<Ingredient, int>>();
-        RecipeNames = new Dictionary<Recipe, string>();
+        RecipeBook = new Dictionary<Recipe, RecipeDescription>();
+        // RecipeNames = new Dictionary<Recipe, string>();
 
-        RecipeNames.Add(Recipe.DreamPowder, "Dream Powder");
-        Dictionary<Ingredient, int> dreamPowderRecipe = new Dictionary<Ingredient, int>();
-        dreamPowderRecipe.Add(Ingredient.Ruby, 2);
-        RecipeBook.Add(Recipe.DreamPowder, dreamPowderRecipe);
+        RecipeDescription dreamPowderRecipe = new RecipeDescription(Recipe.DreamPowder,"Dream Powder",0);
+        dreamPowderRecipe.Ingredients.Add(Ingredient.Ruby, 2);
+        dreamPowderRecipe.Description = "Allows puppies with insomnia to gently fall asleep.";
 
-        RecipeNames.Add(Recipe.PassionPotion, "Passion Potion");
-        Dictionary<Ingredient, int> passionPotionRecipe = new Dictionary<Ingredient, int>();
-        passionPotionRecipe.Add(Ingredient.Emerald, 2);
-        passionPotionRecipe.Add(Ingredient.Topaz, 2);
-        RecipeBook.Add(Recipe.PassionPotion, passionPotionRecipe);
+        RecipeDescription passionPotionRecipe = new RecipeDescription(Recipe.PassionPotion, "Passion Potion", 0);
+        passionPotionRecipe.Ingredients.Add(Ingredient.Emerald, 1);
+        passionPotionRecipe.Ingredients.Add(Ingredient.Topaz, 2);
+        passionPotionRecipe.Description = "Gives a boost to energy so a puppy can play all day!";
 
-        RecipeNames.Add(Recipe.QuickElixer, "Quick Elixer");
-        Dictionary<Ingredient, int> quickElixerRecipe = new Dictionary<Ingredient, int>();
-        quickElixerRecipe.Add(Ingredient.Ruby, 1);
-        quickElixerRecipe.Add(Ingredient.Emerald, 1);
-        quickElixerRecipe.Add(Ingredient.Sapphire, 1);
-        RecipeBook.Add(Recipe.QuickElixer, quickElixerRecipe);
+        RecipeDescription quickElixerRecipe = new RecipeDescription(Recipe.QuickElixer, "Quick Elixer", 0);
+        quickElixerRecipe.Ingredients.Add(Ingredient.Ruby, 1);
+        quickElixerRecipe.Ingredients.Add(Ingredient.Emerald, 1);
+        quickElixerRecipe.Ingredients.Add(Ingredient.Sapphire, 1);
+        quickElixerRecipe.Description = "Drinking this elixer allows the puppy to move super fast.";
     }
 
     void Start()

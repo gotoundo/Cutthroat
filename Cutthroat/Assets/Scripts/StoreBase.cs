@@ -195,9 +195,9 @@ public class StoreBase : MonoBehaviour
             return false;
         
         bool canMakeIt = true;
-        foreach (Ingredient ingr in GameManager.RecipeBook[product].Keys)
+        foreach (Ingredient ingr in GameManager.RecipeBook[product].Ingredients.Keys)
         {
-            int ingredientDeficit = GameManager.RecipeBook[product][ingr] - myIngredients[ingr];
+            int ingredientDeficit = GameManager.RecipeBook[product].Ingredients[ingr] - myIngredients[ingr];
             if (Robot && ingredientDeficit > 0)
             {
                 TryBuyIngredients(ingr, ingredientDeficit);
@@ -207,7 +207,7 @@ public class StoreBase : MonoBehaviour
                     Debug.Log(gameObject.name + " couldn't buy " + ingredientDeficit + " " + ingr.ToString());*/
             }
 
-            if (myIngredients[ingr] < GameManager.RecipeBook[product][ingr])
+            if (myIngredients[ingr] < GameManager.RecipeBook[product].Ingredients[ingr])
                 canMakeIt = false;
         }
         return canMakeIt;
@@ -215,9 +215,9 @@ public class StoreBase : MonoBehaviour
 
     void MakeProduct(Recipe product)
     {
-        foreach (Ingredient ingr in GameManager.RecipeBook[product].Keys)
+        foreach (Ingredient ingr in GameManager.RecipeBook[product].Ingredients.Keys)
         {
-            myIngredients[ingr] -= GameManager.RecipeBook[product][ingr];
+            myIngredients[ingr] -= GameManager.RecipeBook[product].Ingredients[ingr];
         }
     }
 

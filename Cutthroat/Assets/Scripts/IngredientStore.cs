@@ -21,8 +21,8 @@ public class IngredientStore : MonoBehaviour {
     {
         int cost = 0;
 
-        foreach (Ingredient ingr in GameManager.RecipeBook[recipe].Keys)
-            cost += DefaultIngredientPrices[ingr] * GameManager.RecipeBook[recipe][ingr];
+        foreach (Ingredient ingr in GameManager.RecipeBook[recipe].Ingredients.Keys)
+            cost += DefaultIngredientPrices[ingr] * GameManager.RecipeBook[recipe].Ingredients[ingr];
 
         return cost;
     }

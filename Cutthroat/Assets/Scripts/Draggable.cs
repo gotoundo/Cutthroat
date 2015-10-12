@@ -21,7 +21,7 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         isMouseDown = true;
 
-        Debug.Log("Draggable Mouse Down");
+        //Debug.Log("Draggable Mouse Down");
 
         startPosition = target.position;
         startMousePosition = Input.mousePosition;
@@ -29,7 +29,7 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerUp(PointerEventData dt)
     {
-        Debug.Log("Draggable mouse up");
+        //Debug.Log("Draggable mouse up");
 
         isMouseDown = false;
 

@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +40,7 @@ public class SaveTool
             }
             catch (Exception err)
             {
-                Debug.LogError("Bit data super fucked at " + Application.persistentDataPath + saveFileName);
+                Debug.LogError("Bit data super fucked at " + Application.persistentDataPath + saveFileName + "  "+err.ToString());
                 return false;
             }
             

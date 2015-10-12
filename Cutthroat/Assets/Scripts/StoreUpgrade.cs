@@ -15,17 +15,19 @@ public class StoreUpgrade
     public static void Initialize()
     {
         Definitions = new Dictionary<Type, StoreUpgrade>();
-        Definitions.Add(Type.Storefront, new StoreUpgrade("Storefront", numberOfLevels));
-        Definitions.Add(Type.ProductionSpeed, new StoreUpgrade("Production Speed", numberOfLevels));
-        Definitions.Add(Type.Amenities, new StoreUpgrade("Amenities", numberOfLevels));
+        Definitions.Add(Type.Storefront, new StoreUpgrade("Storefront", numberOfLevels, "Makes puppies who are walking by more likely to stop in."));
+        Definitions.Add(Type.ProductionSpeed, new StoreUpgrade("Production Speed", numberOfLevels, "Increases rate of potion creation, for shorter lines."));
+        Definitions.Add(Type.Amenities, new StoreUpgrade("Amenities", numberOfLevels, "Causes puppies to have a positive experience at your store."));
     }
 
     public string Name;
+    public string Description;
 
     public UpgradeLevel[] Levels;
-    public StoreUpgrade(string Name, int levels)
+    public StoreUpgrade(string Name, int levels, string Description)
     {
         this.Name = Name;
+        this.Description = Description;
         Levels = new UpgradeLevel[levels];
         for (int i = 0; i < Levels.Length; i++)
         {

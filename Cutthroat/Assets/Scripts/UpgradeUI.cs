@@ -7,6 +7,7 @@ public class UpgradeUI : MonoBehaviour
     public Text Price;
     public Text Name;
     public Text CurrentLevel;
+    public Text Description;
     public Button PurchaseButton;
     public StoreUpgrade.Type UpgradeType;
     //StoreBase player;
@@ -14,7 +15,7 @@ public class UpgradeUI : MonoBehaviour
     void Start()
     {
         Name.text = StoreUpgrade.Definitions[UpgradeType].Name;
-
+        Description.text = StoreUpgrade.Definitions[UpgradeType].Description;
     }
 
     // Update is called once per frame
