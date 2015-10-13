@@ -16,7 +16,7 @@ public class UIPurchaseOption : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        
+        transform.localScale = new Vector3(1, 1, 1); //no idea why this is necissary but on the mac it sets it to ~2,2,2 for some reason
         gemIcon.overrideSprite = TextureManager.IngredientTextures[ItemSold];
         MarketIndicator.gameObject.SetActive(false);
     }
@@ -38,7 +38,6 @@ public class UIPurchaseOption : MonoBehaviour {
 
         if (GameManager.singleton.gameRunning)
         {
-
             if (IngredientStore.CurrentIngredientPrices[ItemSold] > IngredientStore.DefaultIngredientPrices[ItemSold] * 1.25)
             {
                 MarketIndicator.gameObject.SetActive(true);
@@ -52,7 +51,11 @@ public class UIPurchaseOption : MonoBehaviour {
                 MarketIndicator.text = "Good Deal!";
             }
             else
+            {
                 MarketIndicator.gameObject.SetActive(false);
+                MarketIndicator.color = Color.grey;
+                MarketIndicator.text = "Reasonable";
+            }
         }
 
     }

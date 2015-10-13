@@ -16,6 +16,8 @@ public class RecipeDescription
     {
         Ingredients = new Dictionary<Ingredient, int>();
         this.Type = Type;
+        this.Name = Name;
+        this.SpriteID = SpriteID;
         GameManager.RecipeBook.Add(Type, this);
     }
 }

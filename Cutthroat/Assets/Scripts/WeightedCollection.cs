@@ -13,6 +13,11 @@ public class WeightedCollection<TKey>
         Collection = new Dictionary<TKey, float>();
     }
 
+    public int Count()
+    {
+        return Collection.Count;
+    }
+
     float TotalWeight()
     {
         float total = 0;

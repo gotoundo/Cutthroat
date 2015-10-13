@@ -29,6 +29,8 @@ public class LevelDefinition
         if (testLevel)
         {
             RecipesUsed.Add(Recipe.DreamPowder);
+            RecipesUsed.Add(Recipe.PassionPotion);
+            RecipesUsed.Add(Recipe.QuickElixer);
             FinishLevel();
         }
     }

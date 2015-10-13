@@ -6,15 +6,13 @@ using System.Collections;
 public class TabManager : MonoBehaviour {
 
     public GameObject[] Panels;
+    public Button[] TabButtons;
+
     public GameObject Background;
 
 	// Use this for initialization
 	void Start () {
-        foreach (GameObject tab in Panels)
-            Switch(tab);
-
         Switch(Panels[0]);
-	
 	}
 	
 	// Update is called once per frame
@@ -24,7 +22,19 @@ public class TabManager : MonoBehaviour {
 
     public void Switch(GameObject chosenPanel)
     {
-        foreach (GameObject o in Panels)
-            o.SetActive(o.Equals(chosenPanel));
+        for (int i = 0; i< Panels.Length; i++)
+        {
+            if(Panels[i].Equals(chosenPanel))
+            {
+                Panels[i].SetActive(true);
+                TabButtons[i].interactable = false;
+            }
+            else
+            {
+                Panels[i].SetActive(false);
+                TabButtons[i].interactable = true;
+            }
+            
+        }
     }
 }

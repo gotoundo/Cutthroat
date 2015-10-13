@@ -26,7 +26,7 @@ public class HouseScript : MonoBehaviour {
             GameObject o = (GameObject)Instantiate(customer, new Vector3(transform.position.x, -4, transform.position.z), transform.rotation);
 
             CustomerScript cust = o.GetComponent<CustomerScript>();
-            cust.home = gameObject;
+            cust.SetHome(gameObject);
         }
         myCount = count;
         count++;

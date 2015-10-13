@@ -6,19 +6,18 @@ public enum CustomerState {Shopping,Entering,Waiting,Leaving,HeadingHome,AtHome}
 
 public class CustomerScript : MonoBehaviour {
 
-
     CustomerState myState;
     NavMeshAgent agent;
     Animator animator;
     GameObject moveTarget;
-    public GameObject home;
+    GameObject home;
     StoreBase targetedStore;
     Recipe desiredProduct;
+    Inspectable inspectorData;
 
-    //public Dictionary<Recipe, float> WeightedDesires;
     public Dictionary<StoreBase, float> StoreFavorability;
     public Dictionary<StoreBase, float> StoreAwareness;
-    List<StoreBase> EncounteredStores;
+    List<StoreBase> StoresSeenToday;
     List<StoreBase> StoresVisitedToday;
 
     float defaultMoveSpeed = 3.5f;
@@ -58,12 +57,7 @@ public class CustomerScript : MonoBehaviour {
        the recipe has a margin of 300%. If the price sensitivity is .2, then 300% * .2 = 60% chance to say too pricy!
     */  
 
-    static int count;
-    static int myCount;
-    List<string> debugStringList;
-    public int maxDebugStringLength = 7;
-    public string[] debugStringArray;
-    public string[] debugStoreOptions;
+    
     public int myPosInLine;
 
     float playTime = 0;
@@ -71,16 +65,16 @@ public class CustomerScript : MonoBehaviour {
     void Start()
     {
         GameManager.AllCustomers.Add(this);
+        inspectorData = GetComponent<Inspectable>();
         gameObject.name = PuppyNames.AllNames[Random.Range(0, PuppyNames.AllNames.Length)];
-        myCount = count;
-        count++;
+        inspectorData.Name = gameObject.name;
 
-        //WeightedDesires = new Dictionary<Recipe, float>();
         StoreFavorability = new Dictionary<StoreBase, float>();
         StoreAwareness = new Dictionary<StoreBase, float>();
-        EncounteredStores = new List<StoreBase>();
         StoresVisitedToday = new List<StoreBase>();
-        debugStringList = new List<string>();
+        StoresSeenToday = new List<StoreBase>();
+        
+     //   debugStringList = new List<string>();
         myState = CustomerState.AtHome;
 
         agent = GetComponent<NavMeshAgent>();
@@ -89,11 +83,6 @@ public class CustomerScript : MonoBehaviour {
 
         foreach (StoreBase store in GameManager.AllStores)
             AddFavorability(store, store.startingFavorability);
-
-        
-
-        //foreach (Recipe recipe in GameManager.singleton.CurrentLevel.RecipesUsed)
-            //WeightedDesires.Add(recipe, 1f);
     }
 
     // Update is called once per frame
@@ -115,9 +104,8 @@ public class CustomerScript : MonoBehaviour {
         playTime = Mathf.Max(0, playTime -= Time.deltaTime);
         agent.speed = playTime > 0 ? 0 : defaultMoveSpeed;
         
-        while (debugStringList.Count > maxDebugStringLength)
-            debugStringList.RemoveAt(0);
-        debugStringArray = debugStringList.ToArray();
+        
+       // debugStringArray = debugStringList.ToArray();
     }
 
     private void RunStateLogic()
@@ -131,7 +119,7 @@ public class CustomerScript : MonoBehaviour {
                 if (targetedStore == null && GameManager.AllStores.Count > 0)
                 {
                     targetStore(PickNextStore().gameObject);
-                    debugStringList.Add("A new day. I need " + desiredProduct.ToString() + ". I'll try " + targetedStore.gameObject.name + " next.");
+                    inspectorData.AddUpdate("A new day. I need " + desiredProduct.ToString() + ". I'll try " + targetedStore.gameObject.name + " next.");
                 }
 
                 if (Vector3.Distance(transform.position, targetedStore.transform.position) < interactionRange)
@@ -149,14 +137,15 @@ public class CustomerScript : MonoBehaviour {
                 interactionRange = 6f;
                 if (Vector3.Distance(transform.position, moveTarget.transform.position) < interactionRange)
                 {
-                    
-                    debugStringList.Add("Home sweet home!");
+
+                    inspectorData.AddUpdate("Home sweet home!");
                     sleepTimeRemaining = sleepTime;
                     myState = CustomerState.AtHome;
                 }
                 break;
 
             case CustomerState.AtHome:
+                agent.stoppingDistance = 50f;
                 sleepTimeRemaining -= Time.deltaTime;
                 if (sleepTimeRemaining > 0)
                 {
@@ -172,9 +161,10 @@ public class CustomerScript : MonoBehaviour {
                     }
                     animator.SetBool("Sleeping", false);
                     StoresVisitedToday = new List<StoreBase>();
+                    StoresSeenToday = new List<StoreBase>();
                     PickNewProduct();
                     targetStore(PickNextStore().gameObject);
-                    debugStringList.Add("Morning already? I need " + desiredProduct.ToString() + ". I'll try " + targetedStore.gameObject.name + " next.");
+                    inspectorData.AddUpdate("Morning already? I need " + desiredProduct.ToString() + ". I'll try " + targetedStore.gameObject.name + " next.");
                 }
                 break;
 
@@ -183,46 +173,26 @@ public class CustomerScript : MonoBehaviour {
         }
     }
 
-    private StoreBase PickNextStore(List<StoreBase> excludedStores = null) //
+    private StoreBase PickNextStore()
     {
-        if (excludedStores == null)
-            excludedStores = new List<StoreBase>();
+        List<StoreBase> excludedStores = StoresVisitedToday != null ? StoresVisitedToday : new List<StoreBase>();
 
-        if (StoreAwareness.Keys.Count <= 0 || Random.Range(0f, 1f) <= randomStoreChance)
-            return GameManager.AllStores[Random.Range(0, GameManager.AllStores.Count)];//.GetComponent<StoreBase>();
+        if (StoreAwareness.Keys.Count == 0 || Random.Range(0f, 1f) <= randomStoreChance || GameManager.AllStores.Count <= excludedStores.Count)
+            return GameManager.AllStores[Random.Range(0, GameManager.AllStores.Count)];
 
-        Dictionary<StoreBase, float> StoreWeights = new Dictionary<StoreBase, float>();
-        float totalWeight = 0;
-        foreach (StoreBase store in StoreAwareness.Keys)
+        WeightedCollection<StoreBase> StoreWeights = new WeightedCollection<StoreBase>();
+        foreach (StoreBase store in GameManager.AllStores)
         {
             if (!excludedStores.Contains(store))
             {
-                float myWeight = Mathf.Max(1, baseStoreWeight + StoreFavorability[store] + StoreAwareness[store]);
-                StoreWeights.Add(store, myWeight);
-                totalWeight += myWeight;
+                if (StoreAwareness.ContainsKey(store))
+                    StoreWeights.AddWeight(store, StoreAwareness[store]);
+                if (StoreFavorability.ContainsKey(store))
+                    StoreWeights.AddWeight(store, StoreFavorability[store]);
             }
         }
 
-        List<string> debugList = new List<string>();
-        foreach (StoreBase store in StoreWeights.Keys)
-            debugList.Add(store.gameObject.name + " " + (int)(100 * StoreWeights[store] / totalWeight) + "%  (" + (int)StoreWeights[store] + "/" + (int)totalWeight + ")");
-        debugStoreOptions = debugList.ToArray();
-
-        float rolledWeight = Random.Range(0, totalWeight);
-
-        foreach (StoreBase store in StoreWeights.Keys)
-        {
-            rolledWeight -= StoreWeights[store];
-            if (rolledWeight <= 0)
-                return store;
-
-        }
-
-        //if found nothing just pick one at random
-        StoreBase totallyRandomStore = null;
-        while (totallyRandomStore == null || excludedStores.Contains(totallyRandomStore))
-            totallyRandomStore = GameManager.AllStores[Random.Range(0, GameManager.AllStores.Count)].GetComponent<StoreBase>();
-        return totallyRandomStore;
+        return StoreWeights.RollRandomItem();
     }
 
     public void AddAwareness(StoreBase store, float amount)
@@ -254,6 +224,11 @@ public class CustomerScript : MonoBehaviour {
         myState = CustomerState.Shopping;
     }
 
+    public void SetHome(GameObject homeObject)
+    {
+        home = homeObject;
+    }
+
     private void targetHome()
     {
         moveTarget = home;
@@ -267,11 +242,12 @@ public class CustomerScript : MonoBehaviour {
             if (Vector3.Distance(gameObject.transform.position, GameManager.AllStores[i].gameObject.transform.position) <= scanRange)
             {
                 StoreBase store = GameManager.AllStores[i];
-
-                if (!EncounteredStores.Contains(store))
+                if (!StoresSeenToday.Contains(store))
                 {
-                    EncounteredStores.Add(store);
+                    StoresSeenToday.Add(store);
                     AddAwareness(store, store.PassbyAwarenessBonus());
+                    if (myState == CustomerState.Shopping && targetedStore != store)
+                        targetStore(PickNextStore().gameObject);
                 }
             }
         }
@@ -282,7 +258,7 @@ public class CustomerScript : MonoBehaviour {
         StoresVisitedToday.Add(targetedStore);
         AddFavorability(targetedStore, targetedStore.WalkInFavorabilityBonus());
 
-        debugStringList.Add("Going inside " + targetedStore.gameObject.name + ".");
+       // inspectorData.AddUpdate("Going inside " + targetedStore.gameObject.name + ".");
         
         if (targetedStore.CanMakeProduct(desiredProduct))
         {
@@ -290,13 +266,13 @@ public class CustomerScript : MonoBehaviour {
             
             if (Random.Range(0f,1f) > failureChance)
             {//Success!
-                debugStringList.Add(targetedStore.gameObject.name + " sells " + desiredProduct.ToString() + "! I'm getting in line.");
+                inspectorData.AddUpdate(targetedStore.gameObject.name + " sells " + desiredProduct.ToString() + "! I'm getting in line.");
                 currentWaitTime = 0;
                 myState = CustomerState.Waiting;
             }
             else
             {
-                debugStringList.Add(targetedStore.gameObject.name + " is charging too much for " + desiredProduct.ToString() + "!");
+                inspectorData.AddUpdate(targetedStore.gameObject.name + " is charging too much for " + desiredProduct.ToString() + "!");
                 GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[4], 1.5f);
                 LeaveStore();
                 TryAnotherStore();
@@ -304,7 +280,7 @@ public class CustomerScript : MonoBehaviour {
         }
         else
         {
-            debugStringList.Add(targetedStore.gameObject.name + " doesn't have any "+desiredProduct.ToString()+".");
+            inspectorData.AddUpdate(targetedStore.gameObject.name + " doesn't have any "+desiredProduct.ToString()+".");
             GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[3], 1.5f);
             LeaveStore();
             TryAnotherStore();
@@ -327,7 +303,7 @@ public class CustomerScript : MonoBehaviour {
 
         if (currentWaitTime > maxWaitTime)
         {
-            debugStringList.Add("The wait at "+ targetedStore.gameObject.name + " is too long!");
+            inspectorData.AddUpdate("The wait at "+ targetedStore.gameObject.name + " is too long!");
             GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[2], 1.5f);
             LeaveStore();
             TryAnotherStore();
@@ -338,7 +314,7 @@ public class CustomerScript : MonoBehaviour {
     {
         currentWaitTime = 0;
         targetedStore.CustomerQueue.Remove(this);
-        debugStringList.Add("I'm leaving " + targetedStore.gameObject.name + ".");
+        //inspectorData.AddUpdate("I'm leaving " + targetedStore.gameObject.name + ".");
         targetedStore = null;
     }
 
@@ -348,8 +324,8 @@ public class CustomerScript : MonoBehaviour {
         {
             
             AddFavorability(targetedStore, couldBuyFavorability);
-            debugStringList.Add("I was able to buy " + desiredProduct.ToString() + " from " + targetedStore.gameObject.name + "! Time to go home.");
-            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.PotionTextures[desiredProduct], 1.5f);
+            inspectorData.AddUpdate("I was able to buy " + desiredProduct.ToString() + " from " + targetedStore.gameObject.name + "! Time to go home.");
+            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.PotionIcons[GameManager.RecipeBook[desiredProduct].SpriteID], 1.5f);
             playTime = 2.6f;
             LeaveStore();
             targetHome();
@@ -357,7 +333,7 @@ public class CustomerScript : MonoBehaviour {
         else
         {
             AddFavorability(targetedStore, waitedForNothingFavorability);
-            debugStringList.Add(targetedStore.gameObject.name + " ran out of " + desiredProduct.ToString() + "! ");
+            inspectorData.AddUpdate(targetedStore.gameObject.name + " ran out of " + desiredProduct.ToString() + "! ");
             GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[3], 1.5f);
             LeaveStore();
             TryAnotherStore();
@@ -368,22 +344,18 @@ public class CustomerScript : MonoBehaviour {
     {
         currentNumTrips++;
         if (StoresVisitedToday.Count < StoreAwareness.Count)
-        {
-            targetStore(PickNextStore(StoresVisitedToday).gameObject);
-        }
+            targetStore(PickNextStore().gameObject);
         else
             currentNumTrips = maxTrips;
-
-
 
         if (currentNumTrips >= maxTrips)
         {
             targetHome();
             currentNumTrips = 0;
-            debugStringList.Add("I'm just giving up and going home.");
+            inspectorData.AddUpdate("I'm just giving up and going home.");
         }
         else
-            debugStringList.Add("I'll try " + moveTarget.gameObject.name + " next. I'll try a max of " + (maxTrips - currentNumTrips) + " more stores.");
+            inspectorData.AddUpdate("I'll try " + moveTarget.gameObject.name + " next."); //I'll try a max of " + (maxTrips - currentNumTrips) + " more stores."
     }
 
     private void PickNewProduct()
