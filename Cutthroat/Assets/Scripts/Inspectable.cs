@@ -40,8 +40,8 @@ public class Inspectable : MonoBehaviour {
     void OnMouseDown()
     {
         if (deselectionObject)
-            GameManager.singleton.CloseInspector();
+            GameManager.Main.CloseInspector();
         else if (!EventSystem.current.IsPointerOverGameObject())
-            GameManager.singleton.MakeSelection(gameObject);
+            GameManager.Main.MakeSelection(gameObject);
     }
 }

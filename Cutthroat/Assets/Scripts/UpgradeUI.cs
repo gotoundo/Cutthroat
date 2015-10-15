@@ -21,18 +21,18 @@ public class UpgradeUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CurrentLevel.text = "Level " + GameManager.singleton.player.GetUpgrades()[UpgradeType];
-        PurchaseButton.interactable = GameManager.singleton.player.CanPurchaseUpgrade(UpgradeType);
-        int goldPrice = GameManager.singleton.player.NextUpgradeCost(UpgradeType);
+        CurrentLevel.text = "Level " + GameManager.Main.player.GetUpgrades()[UpgradeType];
+        PurchaseButton.interactable = GameManager.Main.player.CanPurchaseUpgrade(UpgradeType);
+        int goldPrice = GameManager.Main.player.NextUpgradeCost(UpgradeType);
         if (goldPrice == -1)
             Price.text = "Max Upgrade";
         else
-            Price.text = "" + GameManager.singleton.player.NextUpgradeCost(UpgradeType) + " Gold";
+            Price.text = "" + GameManager.Main.player.NextUpgradeCost(UpgradeType) + " Gold";
     }
 
     public void Purchase()
     {
-        if (!GameManager.singleton.player.TryBuyUpgrade(UpgradeType))
+        if (!GameManager.Main.player.TryBuyUpgrade(UpgradeType))
             Debug.Log("Failed to buy " + UpgradeType.ToString());
     }
 }

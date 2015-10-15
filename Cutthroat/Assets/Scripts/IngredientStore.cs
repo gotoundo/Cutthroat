@@ -11,11 +11,10 @@ public class IngredientStore : MonoBehaviour {
     public static Dictionary<Ingredient, int> CurrentIngredientPrices;
     public static Dictionary<Ingredient, int> DefaultIngredientPrices;
     
-    public float MarketRefreshCooldown = 5f;
     public float varianceMin = .5f;
     public float varianceMax = 1.5f;
+    public float dailyFluxMin = .2f;
     public float dailyFluxMax = .5f;
-    public float remainingCooldown = 0f;
 
     public static int AverageRecipeCost(Recipe recipe)
     {
@@ -31,23 +30,16 @@ public class IngredientStore : MonoBehaviour {
     public void Initialize()
     {
         Main = this;
-        remainingCooldown = 0;
         NextIngredientPrices = new Dictionary<Ingredient, int>();
         CurrentIngredientPrices = new Dictionary<Ingredient, int>();
 
         DefaultIngredientPrices = new Dictionary<Ingredient, int>();
-        DefaultIngredientPrices.Add(Ingredient.Ruby, 30);
+        DefaultIngredientPrices.Add(Ingredient.Ruby, 20);
         DefaultIngredientPrices.Add(Ingredient.Sapphire, 20);
         DefaultIngredientPrices.Add(Ingredient.Emerald, 10);
         DefaultIngredientPrices.Add(Ingredient.Topaz, 5);
 
-      /*  List<Ingredient> ingredientsUsed = new List<Ingredient>();
-        foreach (Recipe recipe in GameManager.singleton.CurrentLevel.RecipesUsed)
-            foreach (Ingredient ingredient in GameManager.recipeBook[recipe].Keys)
-                if (!ingredientsUsed.Contains(ingredient))
-                    ingredientsUsed.Add(ingredient);*/
-
-        foreach (Ingredient ingr in GameManager.singleton.CurrentLevel.StartingIngredients.Keys)
+        foreach (Ingredient ingr in GameManager.Main.CurrentLevel.StartingIngredients.Keys)
         {
             CurrentIngredientPrices.Add(ingr, DefaultIngredientPrices[ingr]);
             NextIngredientPrices.Add(ingr, DefaultIngredientPrices[ingr]);
@@ -57,40 +49,10 @@ public class IngredientStore : MonoBehaviour {
         RefreshPrices();
     }
 
-    // Use this for initialization
-    void Awake () {
-        
-
-        
-
-    }
-
-    void Start()
-    {
-
-        
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (GameManager.singleton.gameRunning)
-        {
-            remainingCooldown -= Time.deltaTime;
-            if (remainingCooldown <= 0)
-            {
-                remainingCooldown = MarketRefreshCooldown;
-                RefreshPrices();
-            }
-        }
-    }
-
-    private void RefreshPrices()
+    public void RefreshPrices()
     {
         //Copy over next ingredient prices to the current dictionary
         CurrentIngredientPrices = new Dictionary<Ingredient, int>();
-        //new List<StoreBase>(StoreFavorability.Keys)
 
         foreach (Ingredient ingr in new List<Ingredient>(NextIngredientPrices.Keys))
             CurrentIngredientPrices.Add(ingr, NextIngredientPrices[ingr]);
@@ -98,10 +60,15 @@ public class IngredientStore : MonoBehaviour {
         //Generate next prices
         foreach (Ingredient ingr in new List<Ingredient>(NextIngredientPrices.Keys))
         {
-            float finalPrice = NextIngredientPrices[ingr] + (DefaultIngredientPrices[ingr] * Random.Range(-dailyFluxMax, dailyFluxMax));
+            float finalPrice = NextIngredientPrices[ingr] + (DefaultIngredientPrices[ingr] * Random.Range(dailyFluxMin, dailyFluxMax) * negOrPos());
             finalPrice = Mathf.Min(DefaultIngredientPrices[ingr] * varianceMax, Mathf.Max(finalPrice, DefaultIngredientPrices[ingr] * varianceMin));
             NextIngredientPrices[ingr] = Mathf.RoundToInt(finalPrice);
         }
+    }
+
+    int negOrPos()
+    {
+        return Random.Range(-1f, 1f) <= 0 ? -1 : 1;
     }
 
 

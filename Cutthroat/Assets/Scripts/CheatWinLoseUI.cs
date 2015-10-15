@@ -15,20 +15,25 @@ public class CheatWinLoseUI : MonoBehaviour {
 
     public void WinLevel()
     {
-        if (GameManager.singleton != null)
-            GameManager.singleton.autoWin = true;
+        if (GameManager.Main != null)
+            GameManager.Main.autoWin = true;
     }
     public void LoseLevel()
     {
-        if (GameManager.singleton != null)
-            GameManager.singleton.autoLose = true;
+        if (GameManager.Main != null)
+            GameManager.Main.autoLose = true;
     }
 
-    public void EraseData()
+    public static void ResetSaveData()
     {
         SaveData.current = new SaveData();
         SaveData.current.UnlockedLevels.Add(LevelID.L1);
         SaveTool.Save();
+    }
+
+    public void EraseData()
+    {
+        ResetSaveData();
        // Application.LoadLevel("IntroScene");
     }
 }

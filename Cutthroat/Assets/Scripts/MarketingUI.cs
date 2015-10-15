@@ -23,12 +23,12 @@ public class MarketingUI : MonoBehaviour {
         currentCost = Mathf.RoundToInt(PriceSlider.value*StoreBase.MaxMarketingCost);
 
         PriceText.text = ""+ currentCost + " Gold";
-        BuyButton.interactable = currentCost <= GameManager.singleton.player.Gold;
+        BuyButton.interactable = currentCost <= GameManager.Main.player.Gold;
 	}
 
     public void BuyMarketing()
     {
-        GameManager.singleton.player.BuyMarketing(currentCost);
+        GameManager.Main.player.BuyMarketing(currentCost);
         PriceSlider.value = 0f;
     }
 }

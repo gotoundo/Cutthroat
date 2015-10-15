@@ -6,7 +6,8 @@ using System.Text;
 
 public class StoreUpgrade
 {
-    const int numberOfLevels = 5;
+    const int baseNumOfLevels = 8; //1st level counts as base "0"th upgrade level
+    const int baseUpgradeCost = 100; //in gold
 
     public enum Type { Storefront, ProductionSpeed, Amenities };
     public static Dictionary<Type, StoreUpgrade> Definitions;
@@ -15,16 +16,16 @@ public class StoreUpgrade
     public static void Initialize()
     {
         Definitions = new Dictionary<Type, StoreUpgrade>();
-        Definitions.Add(Type.Storefront, new StoreUpgrade("Storefront", numberOfLevels, "Makes puppies who are walking by more likely to stop in."));
-        Definitions.Add(Type.ProductionSpeed, new StoreUpgrade("Production Speed", numberOfLevels, "Increases rate of potion creation, for shorter lines."));
-        Definitions.Add(Type.Amenities, new StoreUpgrade("Amenities", numberOfLevels, "Causes puppies to have a positive experience at your store."));
+        Definitions.Add(Type.Storefront, new StoreUpgrade("Storefront", baseNumOfLevels, baseUpgradeCost, 1f, "Makes puppies who are walking by more likely to stop in."));
+        Definitions.Add(Type.ProductionSpeed, new StoreUpgrade("Brewing Speed", baseNumOfLevels, baseUpgradeCost, 0.5f, "Increases rate of potion creation, for shorter lines."));
+        Definitions.Add(Type.Amenities, new StoreUpgrade("Amenities", baseNumOfLevels, baseUpgradeCost, 1f, "Causes puppies to have a positive experience at your store."));
     }
 
     public string Name;
     public string Description;
 
     public UpgradeLevel[] Levels;
-    public StoreUpgrade(string Name, int levels, string Description)
+    public StoreUpgrade(string Name, int levels, int costBase, float effectBase, string Description)
     {
         this.Name = Name;
         this.Description = Description;
@@ -32,13 +33,11 @@ public class StoreUpgrade
         for (int i = 0; i < Levels.Length; i++)
         {
             Levels[i] = new UpgradeLevel();
-            Levels[i].cost = 100 * i;
-            Levels[i].effect = i;
+            Levels[i].cost = costBase * i;
+            Levels[i].effect = i * effectBase;
         }
     }
-
-
-
+    
 
     public static StoreUpgrade Storefront; //increases 
     public static StoreUpgrade ProductionSpeed; //increases speed that customers are served

@@ -9,21 +9,15 @@ using System.IO;
 
 public class SaveTool
 {
-    //public static int activeSaveFile = 0;
-   // public static SaveData savedGames;
     const string saveFileName = "/savedGames.gd";
-
-    //it's static so we can call it from anywhere
     public static void Save()
     {
-       // SaveTool.savedGames.Add(SaveData.current);
         BinaryFormatter bf = new BinaryFormatter();
         //Application.persistentDataPath is a string, so if you wanted you can put that into debug.log if you want to know where save games are located
         FileStream file = File.Create(Application.persistentDataPath + saveFileName); //you can call it anything you want
         bf.Serialize(file, SaveData.current);
         file.Close();
         Debug.Log("Saved " + Application.persistentDataPath + saveFileName);
-      //  Load(); // temp
     }
 
     public static bool Load()
@@ -40,7 +34,7 @@ public class SaveTool
             }
             catch (Exception err)
             {
-                Debug.LogError("Bit data super fucked at " + Application.persistentDataPath + saveFileName + "  "+err.ToString());
+                Debug.LogError("Could not access Save Data at " + Application.persistentDataPath + saveFileName + " -  "+err.ToString());
                 return false;
             }
             
@@ -68,17 +62,19 @@ public class SaveData
     public static SaveData current;
 
     public List<LevelID> UnlockedLevels;
+    public bool cheatsEnabled()
+    {
+#if UNITY_EDITOR
+        return true;
+#endif
+        return false;
+    }
 
     public static void VictoryUnlock(LevelID id)
     {
         if (!current.UnlockedLevels.Contains(id))
             current.UnlockedLevels.Add(id);
     }
-
-   /* public static void Initialize()
-    {
-        current = new SaveData();
-    }*/
 
     public SaveData()
     {

@@ -36,11 +36,12 @@ public class RecipeUI : MonoBehaviour {
         {
             //Debug.Log(gameObject.name + myRecipe.ToString()+ingr.ToString());
             EndingList.Add(ingr);
-                GameObject ingredientCount = Instantiate(IngredientQuantityWidget);
-                ingredientCount.name = myRecipe.ToString() + " " + ingr.ToString();
-                ingredientCount.transform.SetParent(IngredientsRequired.transform);
-                ingredientCount.GetComponentInChildren<Image>().overrideSprite = TextureManager.IngredientTextures[ingr];
-                ingredientCount.GetComponentInChildren<Text>().text = "x" + GameManager.RecipeBook[myRecipe].Ingredients[ingr] + "";
+            GameObject ingredientCount = Instantiate(IngredientQuantityWidget);
+            ingredientCount.name = myRecipe.ToString() + " " + ingr.ToString();
+            ingredientCount.transform.SetParent(IngredientsRequired.transform);
+            IngredientUI ingredientUI = ingredientCount.GetComponent<IngredientUI>();
+            ingredientUI.ingredient = ingr;
+            ingredientUI.count.text = "x" + GameManager.RecipeBook[myRecipe].Ingredients[ingr] + "";
         }
 
         PriceSlider.maxValue = IngredientStore.AverageRecipeCost(myRecipe) * 3;
@@ -50,7 +51,7 @@ public class RecipeUI : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (player == null)
-            player = GameManager.singleton.player;
+            player = GameManager.Main.player;
 
         
         player.SetPrice(myRecipe, Mathf.RoundToInt(PriceSlider.value));

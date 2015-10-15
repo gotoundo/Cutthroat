@@ -25,10 +25,11 @@ public class RecipeDescription
 //this guy is recreated every time we load a level scene
 public class GameManager : MonoBehaviour {
 
-    public static GameManager singleton;
+    public static GameManager Main;
     public static List<StoreBase> AllStores;
 	public static List<CustomerScript> AllCustomers;
     public static List<HouseScript> AllHouses;
+    public static Dictionary<Recipe, RecipeDescription> RecipeBook;
 
     public GameObject playerStore;
     public GameObject inspectorPanel;
@@ -37,12 +38,6 @@ public class GameManager : MonoBehaviour {
     public GameObject WinPanel;
     public GameObject LosePanel;
 
-    public Text playerIngredientDisplay;
-    public Text playerGoldDisplay;
-
-    public static Dictionary<Recipe, RecipeDescription> RecipeBook;
-   // public static Dictionary<Recipe, string> RecipeNames;
-    
     public StoreBase player;
     public LevelDefinition CurrentLevel;
     public bool gameRunning;
@@ -59,7 +54,7 @@ public class GameManager : MonoBehaviour {
         player = playerStore.GetComponent<StoreBase>();
         LoadRecipes();
 
-        singleton = this;
+        Main = this;
         gameRunning = false;
 
         CurrentLevel = LevelManager.SelectedLevel != null ? LevelManager.SelectedLevel : new LevelDefinition(LevelID.None, true);
@@ -69,10 +64,24 @@ public class GameManager : MonoBehaviour {
         GetComponent<IngredientStore>().Initialize();
     }
 
+    void Start()
+    {
+        AudioManager.Main.Source.clip = AudioManager.Main.Music[0];
+        AudioManager.Main.Source.Play();
+
+        IntroPanel.SetActive(true);
+        WinPanel.SetActive(false);
+        LosePanel.SetActive(false);
+    }
+
+    void Update()
+    {
+        CheckWinOrLose();
+    }
+
     public static void LoadRecipes()
     {
         RecipeBook = new Dictionary<Recipe, RecipeDescription>();
-        // RecipeNames = new Dictionary<Recipe, string>();
 
         RecipeDescription dreamPowderRecipe = new RecipeDescription(Recipe.DreamPowder,"Dream Powder",0);
         dreamPowderRecipe.Ingredients.Add(Ingredient.Ruby, 2);
@@ -89,16 +98,7 @@ public class GameManager : MonoBehaviour {
         quickElixerRecipe.Ingredients.Add(Ingredient.Sapphire, 1);
         quickElixerRecipe.Description = "Drinking this elixer allows the puppy to move super fast.";
     }
-
-    void Start()
-    {
-        AudioManager.Main.Source.clip = AudioManager.Main.Music[0];
-        AudioManager.Main.Source.Play();
-
-        IntroPanel.SetActive(true);
-        WinPanel.SetActive(false);
-        LosePanel.SetActive(false);
-    }
+    
 
     public void BeginPlay()
     {
@@ -109,19 +109,10 @@ public class GameManager : MonoBehaviour {
     }
 
 
-
-    // Update is called once per frame
-
     bool saved = false;
-    void Update()
+    void CheckWinOrLose()
     {
-        playerGoldDisplay.text = ""+playerStore.GetComponent<StoreBase>().Gold+" Gold";
-
-        playerIngredientDisplay.text = "-- Ingredients --";
-        foreach (Ingredient ingr in player.GetIngredients().Keys)
-            playerIngredientDisplay.text += "\n" + ingr.ToString() + ":  " + player.GetIngredients()[ingr];
-
-        if(autoWin || gameRunning && CurrentLevel.HasWon())
+        if (autoWin || gameRunning && CurrentLevel.HasWon())
         {
             gameRunning = false;
             WinPanel.SetActive(true);
@@ -137,9 +128,8 @@ public class GameManager : MonoBehaviour {
             gameRunning = false;
             LosePanel.SetActive(true);
         }
-
-        
     }
+
 
     public void MakeSelection(GameObject newSelection)
     {

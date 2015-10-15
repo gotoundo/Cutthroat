@@ -11,21 +11,26 @@ public class OverheadIconManager : MonoBehaviour {
     public GameObject myOverheadIcon;
     public Image myOverheadImage;
     public FloatingIcon icon;
-    
 
 
+    GameObject FloatingIconDump;
 
 	// Use this for initialization
 	void Start () {
+        if (FloatingIconDump == null)
+            FloatingIconDump = GameObject.FindGameObjectWithTag("FloatingIconDump");
+
+
         MainCanvas = ((GameObject)GameObject.FindGameObjectWithTag("Canvas")).GetComponent<Canvas>() ;
         myOverheadIcon = (GameObject)Instantiate(overheadIconTemplate);
-        myOverheadIcon.transform.SetParent(MainCanvas.transform);
+        myOverheadIcon.transform.SetParent(FloatingIconDump.transform);
         icon = myOverheadIcon.GetComponent<FloatingIcon>();
         icon.Target = transform;
         
 
         myOverheadImage = myOverheadIcon.GetComponent<Image>();
         
+
         myOverheadIcon.SetActive(false);
 	}
 

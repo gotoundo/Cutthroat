@@ -15,14 +15,13 @@ public class StoreBase : MonoBehaviour
     Dictionary<Recipe, int> myProducts; //and costs
     Dictionary<StoreUpgrade.Type, int> myUpgrades;
 
-    const float baseProductionTime = 5f;//seconds
+    const float baseProductionTime = 5f;
 	const float startingMargin = 1.25f;
     public const float MaxMarketingCost = 300;
     const float MaxMarketingToPercentOfMaxAwarness = .5f;
 
     public float productionTimeRemaining = 0f;
 	public float startingFavorability = 0f;
-    //bool firstRun = true;
 
     void Start()
     {
@@ -33,13 +32,13 @@ public class StoreBase : MonoBehaviour
         myUpgrades = new Dictionary<StoreUpgrade.Type, int>();
         CustomerQueue = new List<CustomerScript>();
 
-        foreach(KeyValuePair<Ingredient,int> pair in GameManager.singleton.CurrentLevel.StartingIngredients)
+        foreach(KeyValuePair<Ingredient,int> pair in GameManager.Main.CurrentLevel.StartingIngredients)
             myIngredients.Add(pair.Key, pair.Value);
 
-        foreach(Recipe recipe in GameManager.singleton.CurrentLevel.RecipesUsed)
+        foreach(Recipe recipe in GameManager.Main.CurrentLevel.RecipesUsed)
             myProducts.Add(recipe, Mathf.RoundToInt(IngredientStore.AverageRecipeCost(recipe) * startingMargin));
 
-        Gold = GameManager.singleton.CurrentLevel.StartingGold;
+        Gold = GameManager.Main.CurrentLevel.StartingGold;
 
         myUpgrades.Add(StoreUpgrade.Type.Amenities, 0);
         myUpgrades.Add(StoreUpgrade.Type.ProductionSpeed, 0);
@@ -48,7 +47,7 @@ public class StoreBase : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.singleton.gameRunning)
+        if (GameManager.Main.gameRunning)
         {
             if (CustomerQueue.Count == 0)
                 productionTimeRemaining = ProductionTime();
@@ -199,13 +198,7 @@ public class StoreBase : MonoBehaviour
         {
             int ingredientDeficit = GameManager.RecipeBook[product].Ingredients[ingr] - myIngredients[ingr];
             if (Robot && ingredientDeficit > 0)
-            {
                 TryBuyIngredients(ingr, ingredientDeficit);
-                /*if ()
-                    Debug.Log(gameObject.name + " is bought " + ingredientDeficit + " " + ingr.ToString());
-                else
-                    Debug.Log(gameObject.name + " couldn't buy " + ingredientDeficit + " " + ingr.ToString());*/
-            }
 
             if (myIngredients[ingr] < GameManager.RecipeBook[product].Ingredients[ingr])
                 canMakeIt = false;
@@ -216,19 +209,6 @@ public class StoreBase : MonoBehaviour
     void MakeProduct(Recipe product)
     {
         foreach (Ingredient ingr in GameManager.RecipeBook[product].Ingredients.Keys)
-        {
             myIngredients[ingr] -= GameManager.RecipeBook[product].Ingredients[ingr];
-        }
     }
-
-	/*public void addUniversalFavorability(float favorability)
-	{
-		
-		foreach(CustomerScript customer in GameManager.AllCustomers)
-			customer.AddFavorability(this, favorability);
-	}*/
-
-    // Update is called once per frame
-
-   
 }

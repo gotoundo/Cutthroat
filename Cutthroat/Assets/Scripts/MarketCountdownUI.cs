@@ -13,7 +13,7 @@ public class MarketCountdownUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        GetComponent<Text>().text = Prefix + (int)IngredientStore.Main.remainingCooldown;
+        GetComponent<Text>().text = Prefix + (int)Timepiece.Main.TimeLeftInDay;
 
     }
 }

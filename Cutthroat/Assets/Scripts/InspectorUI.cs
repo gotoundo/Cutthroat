@@ -11,14 +11,14 @@ public class InspectorUI : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        InspectedObject = GameManager.singleton.SelectedObject.GetComponent<Inspectable>();
+        InspectedObject = GameManager.Main.SelectedObject.GetComponent<Inspectable>();
         InspectedObject.newData = true;
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        Inspectable NewSelectedObject = GameManager.singleton.SelectedObject.GetComponent<Inspectable>();
+        Inspectable NewSelectedObject = GameManager.Main.SelectedObject.GetComponent<Inspectable>();
         if (InspectedObject != NewSelectedObject)
         {
             InspectedObject = NewSelectedObject;

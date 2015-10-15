@@ -8,26 +8,29 @@ public class UIPurchaseOption : MonoBehaviour {
 
     public Ingredient ItemSold;
     public Text ItemName;
-    public Text ItemCost;
+    //public Text ItemCost;
     public Button[] purchaseButton;
-    public Image gemIcon;
+    //public Image gemIcon;
+    public GameObject GemDisplay;
     public Text MarketIndicator;
     StoreBase player;
 
     // Use this for initialization
     void Start () {
         //transform.localScale = new Vector3(1, 1, 1); //no idea why this is necissary but on the mac it sets it to ~2,2,2 for some reason
-        gemIcon.overrideSprite = TextureManager.IngredientTextures[ItemSold];
+        //gemIcon.overrideSprite = TextureManager.IngredientTextures[ItemSold];
+        GemDisplay.GetComponent<IngredientUI>().ingredient = ItemSold;
         MarketIndicator.gameObject.SetActive(false);
+        ItemName.text = ItemSold.ToString();
     }
 	
 	// Update is called once per frame
 	void Update () {
 
         if(player == null)
-            player = GameManager.singleton.player;
+            player = GameManager.Main.player;
 
-        ItemName.text = ItemSold.ToString() + " (x"+player.GetIngredients()[ItemSold]+")";
+       // ItemName.text = ItemSold.ToString() + " (x"+player.GetIngredients()[ItemSold]+")";
 
         for (int i = 0; i < purchaseButton.Length; i++)
         {
@@ -36,7 +39,7 @@ public class UIPurchaseOption : MonoBehaviour {
             purchaseButton[i].GetComponentInChildren<Text>().text = "(x" + quantity + ") " + IngredientStore.CurrentIngredientPrices[ItemSold] * quantity + " Gold";
         }
 
-        if (GameManager.singleton.gameRunning)
+        if (GameManager.Main.gameRunning)
         {
             if (IngredientStore.CurrentIngredientPrices[ItemSold] > IngredientStore.DefaultIngredientPrices[ItemSold] * 1.25)
             {

@@ -56,7 +56,7 @@ public class LevelDefinition
                 if (condition.qualifier == Qualifier.None)
                     return condition.ifPassedResult();
 
-                float comparedValue = condition.metric == Metric.Gold ? GameManager.singleton.player.Gold : ProgressPanel.popularityPercent(GameManager.singleton.player);
+                float comparedValue = condition.metric == Metric.Gold ? GameManager.Main.player.Gold : ProgressPanel.popularityPercent(GameManager.Main.player);
 
                 if (condition.qualifier == Qualifier.GreaterThan)
                     if (comparedValue > condition.amount)

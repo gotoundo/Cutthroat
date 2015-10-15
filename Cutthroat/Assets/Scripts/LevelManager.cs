@@ -27,16 +27,11 @@ public class LevelManager : MonoBehaviour {
     {
         Main = this;
         LevelDefinitions = new Dictionary<LevelID, LevelDefinition>();
+
+        if (!SaveTool.Load())
+            CheatWinLoseUI.ResetSaveData();
         
-        if(!SaveTool.Load())
-        {
-            SaveData.current = new SaveData();
-            SaveData.current.UnlockedLevels.Add(LevelID.L1);
-            SaveTool.Save();
-        }
-
-
-        LoadLevelData();
+            LoadLevelData();
     }
 
     void LoadLevelData()

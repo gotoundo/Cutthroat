@@ -5,7 +5,7 @@ public class ProductsPaneUI : MonoBehaviour {
     public GameObject RowTemplate;
 	// Use this for initialization
 	void Start () {
-        foreach(Recipe recipe in GameManager.singleton.CurrentLevel.RecipesUsed)
+        foreach(Recipe recipe in GameManager.Main.CurrentLevel.RecipesUsed)
         {
             GameObject recipeRow = (GameObject)Instantiate(RowTemplate);
             recipeRow.transform.SetParent(transform);

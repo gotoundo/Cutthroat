@@ -20,6 +20,12 @@ public class AdamBuilder : MonoBehaviour {
         screenshotNum++;
     }
 
+    [PostProcessBuild]
+    static void ResetSaveFile(UnityEditor.BuildTarget target, string whoknows)
+    {
+        CheatWinLoseUI.ResetSaveData();
+    }
+
     /*[PostProcessBuild]
     static void IncrementVersion(UnityEditor.BuildTarget target, string whoknows)
     {
