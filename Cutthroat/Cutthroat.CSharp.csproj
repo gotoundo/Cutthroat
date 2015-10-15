@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Assets\Fantasy Gui Pack\Demo\Scripts\CoolDown.cs" />
     <Compile Include="Assets\Fantasy Gui Pack\Demo\Scripts\SelectDifficulty.cs" />
+    <Compile Include="Assets\FixedScale.cs" />
     <Compile Include="Assets\Scripts\AssetManager.cs" />
     <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\AvatarManager.cs" />

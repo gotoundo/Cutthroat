@@ -32,7 +32,7 @@ public class AudioManager : MonoBehaviour {
     float BarkMinWait = 0.25f;
     float BarkMaxWait = 2f;
     float CurrentBarkdown = 1f;
-    float BarkVolume = .25f;
+    float BarkVolume = .1f;
     void Update () {
         if(BarkingDogs)
         {

@@ -7,6 +7,7 @@ public class MainMenuManager : MonoBehaviour {
 	void Start () {
         AudioManager.Main.Source.clip = AudioManager.Main.Music[1];
         AudioManager.Main.Source.Play();
+        AudioManager.Main.BarkingDogs = false;
 
     }
 	

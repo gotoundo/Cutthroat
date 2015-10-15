@@ -24,7 +24,7 @@ public class RecipeUI : MonoBehaviour {
 
     void Start () {
 
-        transform.localScale = new Vector3(1, 1, 1);
+       // transform.localScale = new Vector3(1, 1, 1);
         x++;
         Name.text = GameManager.RecipeBook[myRecipe].Name;
 
