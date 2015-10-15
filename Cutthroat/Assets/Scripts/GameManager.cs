@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum Recipe { DreamPowder, PassionPotion, QuickElixer }
+public enum Recipe { DreamPowder, PassionPotion, QuickElixer, FleaPoultice }
 
 public class RecipeDescription
 {
@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour {
         Main = this;
         gameRunning = false;
 
-        CurrentLevel = LevelManager.SelectedLevel != null ? LevelManager.SelectedLevel : new LevelDefinition(LevelID.None, true);
+        CurrentLevel = LevelManager.SelectedLevel != null ? LevelManager.SelectedLevel : new LevelDefinition(LevelID.None,"Default Level",LevelID.None,500, true);
 
         Zeitgeist.Initialize(CurrentLevel);
         StoreUpgrade.Initialize();
@@ -97,6 +97,11 @@ public class GameManager : MonoBehaviour {
         quickElixerRecipe.Ingredients.Add(Ingredient.Emerald, 1);
         quickElixerRecipe.Ingredients.Add(Ingredient.Sapphire, 1);
         quickElixerRecipe.Description = "Drinking this elixer allows the puppy to move super fast.";
+
+        RecipeDescription fleaPoulticeRecipe = new RecipeDescription(Recipe.FleaPoultice, "Flea Poultice", 0);
+        fleaPoulticeRecipe.Ingredients.Add(Ingredient.Sapphire, 1);
+        fleaPoulticeRecipe.Ingredients.Add(Ingredient.Topaz, 1);
+        fleaPoulticeRecipe.Description = "Applying this lotion removes a nasty case of the fleas.";
     }
     
 

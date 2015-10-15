@@ -19,9 +19,14 @@ public class LevelDefinition
 
     public int startingIngredientQuantities = 10;
 
-    public LevelDefinition(LevelID myID,  bool testLevel = false)
+    public LevelDefinition(LevelID myID, string Title, LevelID WinUnlock, int StartingGold, bool testLevel = false)
     {
+
         this.myID = myID;
+        this.Title = Title;
+        this.WinUnlock = WinUnlock;
+        this.StartingGold = StartingGold;
+
         Conditions = new List<LevelCondition>();
         RecipesUsed = new List<Recipe>();
         StartingIngredients = new Dictionary<Ingredient, int>();
@@ -30,7 +35,7 @@ public class LevelDefinition
         {
             RecipesUsed.Add(Recipe.DreamPowder);
             RecipesUsed.Add(Recipe.PassionPotion);
-            RecipesUsed.Add(Recipe.QuickElixer);
+            RecipesUsed.Add(Recipe.FleaPoultice);
             FinishLevel();
         }
     }

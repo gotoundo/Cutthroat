@@ -8,7 +8,7 @@ public class AvatarManager : MonoBehaviour {
     public static AvatarManager Main;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         Main = this;
 	
 	}

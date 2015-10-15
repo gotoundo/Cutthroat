@@ -30,6 +30,7 @@ public class TextureManager : MonoBehaviour {
         PotionTextures.Add(Recipe.DreamPowder, PotionIcons[0]);
         PotionTextures.Add(Recipe.PassionPotion, PotionIcons[1]);
         PotionTextures.Add(Recipe.QuickElixer, PotionIcons[2]);
+        PotionTextures.Add(Recipe.FleaPoultice, PotionIcons[3]);
 
         IngredientTextures = new Dictionary<Ingredient, Sprite>();
         IngredientTextures.Add(Ingredient.Emerald, IngredientIcons[0]);
