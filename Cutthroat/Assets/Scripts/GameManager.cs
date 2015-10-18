@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour {
     public GameObject inspectorPanel;
     public GameObject SelectedObject;
     public GameObject IntroPanel;
+    public GameObject StoryPanel;
     public GameObject WinPanel;
     public GameObject LosePanel;
 
@@ -55,10 +56,10 @@ public class GameManager : MonoBehaviour {
         LoadRecipes();
 
         Main = this;
-        gameRunning = false;
+        gameRunning = true;
 
         CurrentLevel = LevelManager.SelectedLevel != null ? LevelManager.SelectedLevel : new LevelDefinition(LevelID.None,"Default Level",LevelID.None,500, true);
-
+        CurrentLevel.ResetConditions();
         Zeitgeist.Initialize(CurrentLevel);
         StoreUpgrade.Initialize();
         GetComponent<IngredientStore>().Initialize();
@@ -68,15 +69,58 @@ public class GameManager : MonoBehaviour {
     {
         AudioManager.Main.Source.clip = AudioManager.Main.Music[0];
         AudioManager.Main.Source.Play();
+        
 
-        IntroPanel.SetActive(true);
+        //IntroPanel.SetActive(true);
         WinPanel.SetActive(false);
         LosePanel.SetActive(false);
     }
 
+    bool puppiesCreated = false;
     void Update()
     {
+        if (!puppiesCreated)
+            CreatePuppies();
+
+        if (gameRunning)
+        {
+            
+            List<StoryEventData> TriggeredEvents = CurrentLevel.TriggerStoryEvent();
+            RunTriggeredEvents(TriggeredEvents);
+        }
+        
         CheckWinOrLose();
+    }
+
+    public void RunTriggeredEvents(List<StoryEventData> TriggeredEvents)
+    {
+        if (TriggeredEvents.Count > 0)
+        {
+            gameRunning = false;
+            StoryPanel.SetActive(true);
+            StoryEventData storyData = TriggeredEvents[0];
+            StoryWindowUI storyWindow = StoryPanel.GetComponent<StoryWindowUI>();
+
+            storyWindow.Dialog.text = storyData.Description;
+            storyWindow.Title.text = storyData.EventTitle;
+            storyWindow.NPCName.text = storyData.NPCName;
+            storyWindow.Portrait.overrideSprite = TextureManager.PortraitTextures[storyData.Portrait];
+
+            foreach (StoryEventData choiceData in storyData.Choices)
+            {
+                GameObject choiceObject = Instantiate(storyWindow.OptionsButtonTemplate);
+                choiceObject.transform.SetParent(storyWindow.OptionsPanel.transform);
+                StoryChoiceUI choiceUI = choiceObject.GetComponent<StoryChoiceUI>();
+                choiceUI.ButtonText.text = choiceData.ButtonText;
+                choiceUI.StoryResult = choiceData;
+            }
+
+            if(storyData.Choices.Count == 0)
+            {
+                gameRunning = true;
+                StoryPanel.SetActive(false);
+            }
+        }
     }
 
     public static void LoadRecipes()
@@ -105,8 +149,9 @@ public class GameManager : MonoBehaviour {
     }
     
 
-    public void BeginPlay()
+    void CreatePuppies()
     {
+        puppiesCreated = true;
         gameRunning = true;
         AudioManager.Main.BarkingDogs = true;
         foreach (HouseScript house in AllHouses)
@@ -117,6 +162,9 @@ public class GameManager : MonoBehaviour {
     bool saved = false;
     void CheckWinOrLose()
     {
+        
+
+
         if (autoWin || gameRunning && CurrentLevel.HasWon())
         {
             gameRunning = false;

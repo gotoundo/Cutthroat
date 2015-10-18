@@ -24,6 +24,18 @@ public class AdamBuilder : MonoBehaviour {
     static void ResetSaveFile(UnityEditor.BuildTarget target, string whoknows)
     {
         CheatWinLoseUI.ResetSaveData();
+        BumpBundleVersion();
+    }
+
+    private static void BumpBundleVersion()
+    {
+        float versionFloat;
+
+        if (float.TryParse(PlayerSettings.bundleVersion, out versionFloat))
+        {
+            versionFloat += 0.01f;
+            PlayerSettings.bundleVersion = versionFloat.ToString();
+        }
     }
 
     /*[PostProcessBuild]

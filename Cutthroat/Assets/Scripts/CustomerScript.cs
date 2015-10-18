@@ -88,24 +88,24 @@ public class CustomerScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        RunStateLogic();
+        if (GameManager.Main.gameRunning)
+        {
+            RunStateLogic();
 
-        if (moveTarget != null)
-            agent.SetDestination(moveTarget.transform.position);
+            if (moveTarget != null)
+                agent.SetDestination(moveTarget.transform.position);
 
-        foreach (StoreBase store in new List<StoreBase>(StoreAwareness.Keys))
-            AddAwareness(store, -AwarenessDecayPerSecond * Time.deltaTime);
-        foreach (StoreBase store in new List<StoreBase>(StoreFavorability.Keys))
-            AddFavorability(store, -FavorabilityDecayPerSecond * Time.deltaTime);
+            foreach (StoreBase store in new List<StoreBase>(StoreAwareness.Keys))
+                AddAwareness(store, -AwarenessDecayPerSecond * Time.deltaTime);
+            foreach (StoreBase store in new List<StoreBase>(StoreFavorability.Keys))
+                AddFavorability(store, -FavorabilityDecayPerSecond * Time.deltaTime);
 
-        animator.SetFloat("MoveSpeed", agent.velocity.magnitude);
-        animator.SetFloat("PlayTime", playTime);
-        
-        playTime = Mathf.Max(0, playTime -= Time.deltaTime);
-        agent.speed = playTime > 0 ? 0 : defaultMoveSpeed;
-        
-        
-       // debugStringArray = debugStringList.ToArray();
+            animator.SetFloat("MoveSpeed", agent.velocity.magnitude);
+            animator.SetFloat("PlayTime", playTime);
+
+            playTime = Mathf.Max(0, playTime -= Time.deltaTime);
+            agent.speed = playTime > 0 ? 0 : defaultMoveSpeed;
+        }
     }
 
     private void RunStateLogic()
@@ -128,7 +128,7 @@ public class CustomerScript : MonoBehaviour {
                 break;
 
             case CustomerState.Waiting:
-                agent.stoppingDistance = 3f;
+                agent.stoppingDistance = 4f;
                 WaitInLine();
                 break;
 

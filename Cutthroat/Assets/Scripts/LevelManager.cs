@@ -38,7 +38,15 @@ public class LevelManager : MonoBehaviour {
     {
         //Level 1 - Corgi Town
         LevelDefinition workingLevel = new LevelDefinition(LevelID.L1, "Corgi Town", LevelID.L2, 600);
-        workingLevel.MainObjectiveDescription = "Welcome to Puppy Potions! To win this game you have to become the most popular potion shop in town. Buy ingredients when they're cheap and adjust potion prices to remain profitable. Don't forget to buy marketing and upgrade your store! \n\n Get to 50% popularity before 30 days to win this town.";
+
+        StoryEventData introEventData = new StoryEventData("Welcome!", PortraitID.Pomeranian, "Get of of my town you filthy peasant.", "Dr. Dogson");
+        introEventData.Choices.Add(new StoryEventData("Uh, no?"));
+        LevelCondition introCondition = new LevelCondition(Result.Story, 0);
+        introCondition.triggeredStory = introEventData;
+        workingLevel.Conditions.Add(introCondition);
+
+
+        //workingLevel.MainObjectiveDescription = "Welcome to Puppy Potions! To win this game you have to become the most popular potion shop in town. Buy ingredients when they're cheap and adjust potion prices to remain profitable. Don't forget to buy marketing and upgrade your store! \n\n Get to 50% popularity before 30 days to win this town.";
         workingLevel.Conditions.Add(new LevelCondition(Result.Win, TriggerFrequency.Continuous, Qualifier.GreaterThan, Metric.PopularityPercent, .5f));
         workingLevel.Conditions.Add(new LevelCondition(Result.Lose, 30));
         workingLevel.RecipesUsed.Add(Recipe.DreamPowder);

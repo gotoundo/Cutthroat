@@ -16,12 +16,10 @@ public class LevelDefinition
 
     public Dictionary<Ingredient, int> StartingIngredients;
     public int StartingGold;
-
     public int startingIngredientQuantities = 10;
 
     public LevelDefinition(LevelID myID, string Title, LevelID WinUnlock, int StartingGold, bool testLevel = false)
     {
-
         this.myID = myID;
         this.Title = Title;
         this.WinUnlock = WinUnlock;
@@ -42,7 +40,7 @@ public class LevelDefinition
 
     public void FinishLevel()
     {
-        if(GameManager.RecipeBook == null)
+        if (GameManager.RecipeBook == null)
             GameManager.LoadRecipes();
 
         foreach (Recipe recipe in RecipesUsed)
@@ -56,7 +54,7 @@ public class LevelDefinition
     {
         foreach (LevelCondition condition in Conditions)
         {
-            if(condition.trigger == TriggerFrequency.Continuous || Timepiece.CurrentDay > condition.deadline)
+            if (condition.trigger == TriggerFrequency.Continuous || Timepiece.CurrentDay > condition.deadline)
             {
                 if (condition.qualifier == Qualifier.None)
                     return condition.ifPassedResult();
@@ -72,7 +70,6 @@ public class LevelDefinition
                         return condition.ifPassedResult();
             }
         }
-
         return 0;
     }
 
@@ -84,5 +81,48 @@ public class LevelDefinition
     public bool HasLost()
     {
         return CheckGameOver() == -1;
+    }
+
+    public void ResetConditions()
+    {
+        foreach (LevelCondition condition in Conditions)
+            condition.hasBeenTriggered = false;
+    }
+
+    public List<StoryEventData> TriggerStoryEvent()
+    {
+        List<StoryEventData> TriggeredEvents = new List<StoryEventData>();
+        foreach (LevelCondition condition in Conditions)
+        {
+            if ((!condition.hasBeenTriggered && condition.triggeredStory != null) &&
+                (condition.trigger == TriggerFrequency.Continuous || Timepiece.CurrentDay > condition.deadline))
+            {
+                if (condition.qualifier == Qualifier.None)
+                {
+                    TriggeredEvents.Add(condition.triggeredStory);
+                    condition.hasBeenTriggered = true;
+                }
+
+                float comparedValue = condition.metric == Metric.Gold ? GameManager.Main.player.Gold : ProgressPanel.popularityPercent(GameManager.Main.player);
+
+                if (condition.qualifier == Qualifier.GreaterThan)
+                {
+                    if (comparedValue > condition.amount)
+                    {
+                        TriggeredEvents.Add(condition.triggeredStory);
+                        condition.hasBeenTriggered = true;
+                    }
+                }
+                else if (condition.qualifier == Qualifier.LessThan)
+                {
+                    if (comparedValue < condition.amount)
+                    {
+                        TriggeredEvents.Add(condition.triggeredStory);
+                        condition.hasBeenTriggered = true;
+                    }
+                }
+            }
+        }
+        return TriggeredEvents;
     }
 }
