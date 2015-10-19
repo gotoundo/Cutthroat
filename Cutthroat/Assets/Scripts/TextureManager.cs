@@ -8,11 +8,13 @@ public class TextureManager : MonoBehaviour {
     public static Dictionary<Recipe, Sprite> PotionTextures;
     public static Dictionary<Ingredient, Sprite> IngredientTextures;
     public static Dictionary<PortraitID, Sprite> PortraitTextures;
+    public static Dictionary<StoreUpgrade.Type, Sprite> UpgradeTextures;
 
     public Sprite[] OverheadIcons;
     public Sprite[] PotionIcons;
     public Sprite[] IngredientIcons;
     public Sprite[] PortraitIcons;
+    public Sprite[] UpgradeIcons;
 
     // Use this for initialization
     void Awake()
@@ -29,16 +31,19 @@ public class TextureManager : MonoBehaviour {
         }
 
         PotionTextures = new Dictionary<Recipe, Sprite>();
-        PotionTextures.Add(Recipe.DreamPowder, PotionIcons[0]);
+        PotionTextures.Add(Recipe.DreamPowder, PotionIcons[5]);
         PotionTextures.Add(Recipe.PassionPotion, PotionIcons[1]);
-        PotionTextures.Add(Recipe.QuickElixer, PotionIcons[2]);
-        PotionTextures.Add(Recipe.FleaPoultice, PotionIcons[3]);
+        PotionTextures.Add(Recipe.QuickElixer, PotionIcons[3]);
+        PotionTextures.Add(Recipe.FleaPoultice, PotionIcons[0]);
 
         IngredientTextures = new Dictionary<Ingredient, Sprite>();
-        IngredientTextures.Add(Ingredient.Emerald, IngredientIcons[0]);
-        IngredientTextures.Add(Ingredient.Ruby, IngredientIcons[1]);
-        IngredientTextures.Add(Ingredient.Sapphire, IngredientIcons[2]);
-        IngredientTextures.Add(Ingredient.Topaz, IngredientIcons[3]);
+        IngredientTextures.Add(Ingredient.Ruby, IngredientIcons[0]);
+        IngredientTextures.Add(Ingredient.Amber, IngredientIcons[1]);
+        IngredientTextures.Add(Ingredient.Topaz, IngredientIcons[2]);
+        IngredientTextures.Add(Ingredient.Emerald, IngredientIcons[3]);
+        IngredientTextures.Add(Ingredient.Sapphire, IngredientIcons[4]);
+        IngredientTextures.Add(Ingredient.Amethyst, IngredientIcons[5]);
+
 
         PortraitTextures = new Dictionary<PortraitID, Sprite>();
         PortraitTextures.Add(PortraitID.Beagle, PortraitIcons[0]);
@@ -53,6 +58,11 @@ public class TextureManager : MonoBehaviour {
         PortraitTextures.Add(PortraitID.Pug, PortraitIcons[9]);
         PortraitTextures.Add(PortraitID.Shihzu, PortraitIcons[10]);
         PortraitTextures.Add(PortraitID.SiberianHusky, PortraitIcons[11]);
+
+        UpgradeTextures = new Dictionary<StoreUpgrade.Type, Sprite>();
+        UpgradeTextures.Add(StoreUpgrade.Type.Amenities, UpgradeIcons[0]);
+        UpgradeTextures.Add(StoreUpgrade.Type.ProductionSpeed, UpgradeIcons[1]);
+        UpgradeTextures.Add(StoreUpgrade.Type.Storefront, UpgradeIcons[2]);
     }
 
     void Start () {

@@ -10,12 +10,14 @@ public class UpgradeUI : MonoBehaviour
     public Text Description;
     public Button PurchaseButton;
     public StoreUpgrade.Type UpgradeType;
+    public Image Icon;
     //StoreBase player;
     // Use this for initialization
     void Start()
     {
         Name.text = StoreUpgrade.Definitions[UpgradeType].Name;
         Description.text = StoreUpgrade.Definitions[UpgradeType].Description;
+        Icon.overrideSprite = TextureManager.UpgradeTextures[UpgradeType];
     }
 
     // Update is called once per frame

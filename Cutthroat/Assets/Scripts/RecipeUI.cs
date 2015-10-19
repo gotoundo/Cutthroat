@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class RecipeUI : MonoBehaviour {
 
+    public Image HotnessIndicator;
+
     public Text Price;
     public Text Name;
     //public Text Ingredients;

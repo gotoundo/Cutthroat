@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-public enum Ingredient { Ruby, Sapphire, Emerald, Topaz }
+public enum Ingredient { Ruby, Amethyst, Sapphire, Emerald, Topaz, Amber }
 public class IngredientStore : MonoBehaviour {
 
     public static IngredientStore Main;
@@ -11,10 +11,10 @@ public class IngredientStore : MonoBehaviour {
     public static Dictionary<Ingredient, int> CurrentIngredientPrices;
     public static Dictionary<Ingredient, int> DefaultIngredientPrices;
     
-    public float varianceMin = .5f;
-    public float varianceMax = 1.5f;
+    /*public float varianceMin = .5f;
+    public float varianceMax = 1.4f;
     public float dailyFluxMin = .2f;
-    public float dailyFluxMax = .5f;
+    public float dailyFluxMax = .5f;*/
 
     public static int AverageRecipeCost(Recipe recipe)
     {
@@ -35,9 +35,12 @@ public class IngredientStore : MonoBehaviour {
 
         DefaultIngredientPrices = new Dictionary<Ingredient, int>();
         DefaultIngredientPrices.Add(Ingredient.Ruby, 20);
-        DefaultIngredientPrices.Add(Ingredient.Sapphire, 20);
-        DefaultIngredientPrices.Add(Ingredient.Emerald, 10);
+        DefaultIngredientPrices.Add(Ingredient.Amber, 15);
         DefaultIngredientPrices.Add(Ingredient.Topaz, 5);
+        DefaultIngredientPrices.Add(Ingredient.Emerald, 15);
+        DefaultIngredientPrices.Add(Ingredient.Sapphire, 10);
+        DefaultIngredientPrices.Add(Ingredient.Amethyst, 25);
+        
 
         foreach (Ingredient ingr in GameManager.Main.CurrentLevel.StartingIngredients.Keys)
         {
@@ -60,8 +63,9 @@ public class IngredientStore : MonoBehaviour {
         //Generate next prices
         foreach (Ingredient ingr in new List<Ingredient>(NextIngredientPrices.Keys))
         {
-            float finalPrice = NextIngredientPrices[ingr] + (DefaultIngredientPrices[ingr] * Random.Range(dailyFluxMin, dailyFluxMax) * negOrPos());
-            finalPrice = Mathf.Min(DefaultIngredientPrices[ingr] * varianceMax, Mathf.Max(finalPrice, DefaultIngredientPrices[ingr] * varianceMin));
+            //float finalPrice = NextIngredientPrices[ingr] + (DefaultIngredientPrices[ingr] * Random.Range(dailyFluxMin, dailyFluxMax) * negOrPos());
+            //finalPrice = Mathf.Min(DefaultIngredientPrices[ingr] * varianceMax, Mathf.Max(finalPrice, DefaultIngredientPrices[ingr] * varianceMin));
+            float finalPrice = Random.Range(GameManager.Main.CurrentLevel.marketVarianceMin, GameManager.Main.CurrentLevel.marketVarianceMax) * DefaultIngredientPrices[ingr];
             NextIngredientPrices[ingr] = Mathf.RoundToInt(finalPrice);
         }
     }

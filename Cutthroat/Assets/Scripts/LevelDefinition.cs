@@ -18,6 +18,9 @@ public class LevelDefinition
     public int StartingGold;
     public int startingIngredientQuantities = 10;
 
+    public float marketVarianceMin = .5f;
+    public float marketVarianceMax = 1.5f;
+
     public LevelDefinition(LevelID myID, string Title, LevelID WinUnlock, int StartingGold, bool testLevel = false)
     {
         this.myID = myID;

@@ -6,10 +6,13 @@ public enum CustomerState {Shopping,Entering,Waiting,Leaving,HeadingHome,AtHome}
 
 public class CustomerScript : MonoBehaviour {
 
-    CustomerState myState;
+
+    public string Name;
+
+    public CustomerState myState;
     NavMeshAgent agent;
     Animator animator;
-    GameObject moveTarget;
+    public GameObject moveTarget;
     GameObject home;
     StoreBase targetedStore;
     Recipe desiredProduct;
@@ -113,16 +116,16 @@ public class CustomerScript : MonoBehaviour {
         switch (myState)
         {
             case CustomerState.Shopping:
-                agent.stoppingDistance = 9f;
+                agent.stoppingDistance = 5f;
                 interactionRange = 10f;
                 ScanForNewStores();
                 if (targetedStore == null && GameManager.AllStores.Count > 0)
                 {
-                    targetStore(PickNextStore().gameObject);
-                    inspectorData.AddUpdate("A new day. I need " + desiredProduct.ToString() + ". I'll try " + targetedStore.gameObject.name + " next.");
+                    targetStore(PickNextStore());
+                    inspectorData.AddUpdate("A new day. I need " + desiredProduct.ToString() + ". I'll try " + targetedStore.Name + " next.");
                 }
 
-                if (Vector3.Distance(transform.position, targetedStore.transform.position) < interactionRange)
+                if (Vector3.Distance(transform.position, targetedStore.Entrance.transform.position) <= interactionRange)
                     EnterStore();
 
                 break;
@@ -163,8 +166,8 @@ public class CustomerScript : MonoBehaviour {
                     StoresVisitedToday = new List<StoreBase>();
                     StoresSeenToday = new List<StoreBase>();
                     PickNewProduct();
-                    targetStore(PickNextStore().gameObject);
-                    inspectorData.AddUpdate("Morning already? I need " + desiredProduct.ToString() + ". I'll try " + targetedStore.gameObject.name + " next.");
+                    targetStore(PickNextStore());
+                    inspectorData.AddUpdate("Morning already? I need " + desiredProduct.ToString() + ". I'll try " + targetedStore.Name + " next.");
                 }
                 break;
 
@@ -217,10 +220,10 @@ public class CustomerScript : MonoBehaviour {
             StoreFavorability.Add(store, baseStoreFavorability);
     }
 
-    private void targetStore(GameObject store)
+    private void targetStore(StoreBase store)
     {
-        moveTarget = store;
-        targetedStore = store.GetComponent<StoreBase>();
+        moveTarget = store.Entrance;
+        targetedStore = store;
         myState = CustomerState.Shopping;
     }
 
@@ -239,7 +242,7 @@ public class CustomerScript : MonoBehaviour {
     {
         for(int i = 0; i< GameManager.AllStores.Count;i++)
         {
-            if (Vector3.Distance(gameObject.transform.position, GameManager.AllStores[i].gameObject.transform.position) <= scanRange)
+            if (Vector3.Distance(gameObject.transform.position, GameManager.AllStores[i].Entrance.transform.position) <= scanRange)
             {
                 StoreBase store = GameManager.AllStores[i];
                 if (!StoresSeenToday.Contains(store))
@@ -247,7 +250,7 @@ public class CustomerScript : MonoBehaviour {
                     StoresSeenToday.Add(store);
                     AddAwareness(store, store.PassbyAwarenessBonus());
                     if (myState == CustomerState.Shopping && targetedStore != store)
-                        targetStore(PickNextStore().gameObject);
+                        targetStore(PickNextStore());
                 }
             }
         }
@@ -258,7 +261,7 @@ public class CustomerScript : MonoBehaviour {
         StoresVisitedToday.Add(targetedStore);
         AddFavorability(targetedStore, targetedStore.WalkInFavorabilityBonus());
 
-       // inspectorData.AddUpdate("Going inside " + targetedStore.gameObject.name + ".");
+        inspectorData.AddUpdate("Going inside " + targetedStore.Name + ".");
         
         if (targetedStore.CanMakeProduct(desiredProduct))
         {
@@ -266,13 +269,13 @@ public class CustomerScript : MonoBehaviour {
             
             if (Random.Range(0f,1f) > failureChance)
             {//Success!
-                inspectorData.AddUpdate(targetedStore.gameObject.name + " sells " + desiredProduct.ToString() + "! I'm getting in line.");
+                inspectorData.AddUpdate(targetedStore.Name + " sells " + desiredProduct.ToString() + "! I'm getting in line.");
                 currentWaitTime = 0;
                 myState = CustomerState.Waiting;
             }
             else
             {
-                inspectorData.AddUpdate(targetedStore.gameObject.name + " is charging too much for " + desiredProduct.ToString() + "!");
+                inspectorData.AddUpdate(targetedStore.Name + " is charging too much for " + desiredProduct.ToString() + "!");
                 GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[4], 1.5f);
                 LeaveStore();
                 TryAnotherStore();
@@ -280,7 +283,7 @@ public class CustomerScript : MonoBehaviour {
         }
         else
         {
-            inspectorData.AddUpdate(targetedStore.gameObject.name + " doesn't have any "+desiredProduct.ToString()+".");
+            inspectorData.AddUpdate(targetedStore.Name + " doesn't have any "+desiredProduct.ToString()+".");
             GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[3], 1.5f);
             LeaveStore();
             TryAnotherStore();
@@ -297,13 +300,13 @@ public class CustomerScript : MonoBehaviour {
 
         myPosInLine = targetedStore.CustomerQueue.IndexOf(this);
         if (myPosInLine <= 0)
-            moveTarget = targetedStore.gameObject;
+            moveTarget = targetedStore.Entrance;
         else
             moveTarget = targetedStore.CustomerQueue[myPosInLine - 1].gameObject;
 
         if (currentWaitTime > maxWaitTime)
         {
-            inspectorData.AddUpdate("The wait at "+ targetedStore.gameObject.name + " is too long!");
+            inspectorData.AddUpdate("The wait at "+ targetedStore.Name + " is too long!");
             GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[2], 1.5f);
             LeaveStore();
             TryAnotherStore();
@@ -314,7 +317,6 @@ public class CustomerScript : MonoBehaviour {
     {
         currentWaitTime = 0;
         targetedStore.CustomerQueue.Remove(this);
-        //inspectorData.AddUpdate("I'm leaving " + targetedStore.gameObject.name + ".");
         targetedStore = null;
     }
 
@@ -324,8 +326,8 @@ public class CustomerScript : MonoBehaviour {
         {
             
             AddFavorability(targetedStore, couldBuyFavorability);
-            inspectorData.AddUpdate("I was able to buy " + desiredProduct.ToString() + " from " + targetedStore.gameObject.name + "! Time to go home.");
-            GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.PotionIcons[GameManager.RecipeBook[desiredProduct].SpriteID], 1.5f);
+            inspectorData.AddUpdate("I was able to buy " + desiredProduct.ToString() + " from " + targetedStore.Name + "! Time to go home.");
+            GetComponentInParent<OverheadIconManager>().ShowIcon(GameManager.RecipeBook[desiredProduct].Sprite, 1.5f);
             playTime = 2.6f;
             LeaveStore();
             targetHome();
@@ -333,7 +335,7 @@ public class CustomerScript : MonoBehaviour {
         else
         {
             AddFavorability(targetedStore, waitedForNothingFavorability);
-            inspectorData.AddUpdate(targetedStore.gameObject.name + " ran out of " + desiredProduct.ToString() + "! ");
+            inspectorData.AddUpdate(targetedStore.Name + " ran out of " + desiredProduct.ToString() + "! ");
             GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[3], 1.5f);
             LeaveStore();
             TryAnotherStore();
@@ -344,7 +346,7 @@ public class CustomerScript : MonoBehaviour {
     {
         currentNumTrips++;
         if (StoresVisitedToday.Count < StoreAwareness.Count)
-            targetStore(PickNextStore().gameObject);
+            targetStore(PickNextStore());
         else
             currentNumTrips = maxTrips;
 
@@ -355,7 +357,7 @@ public class CustomerScript : MonoBehaviour {
             inspectorData.AddUpdate("I'm just giving up and going home.");
         }
         else
-            inspectorData.AddUpdate("I'll try " + moveTarget.gameObject.name + " next."); //I'll try a max of " + (maxTrips - currentNumTrips) + " more stores."
+            inspectorData.AddUpdate("I'll try " + targetedStore.Name + " next."); //I'll try a max of " + (maxTrips - currentNumTrips) + " more stores."
     }
 
     private void PickNewProduct()

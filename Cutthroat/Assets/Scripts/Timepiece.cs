@@ -34,6 +34,11 @@ public class Timepiece : MonoBehaviour {
 
     }
 
+    void Start()
+    {
+        //NewDay();
+    }
+
 	
 	// Update is called once per frame
 	void Update () {
@@ -59,5 +64,6 @@ public class Timepiece : MonoBehaviour {
 
         Zeitgeist.RandomizePopularities();
         IngredientStore.Main.RefreshPrices();
+        ProductsPaneUI.UpdateRecipesStatus();
     }
 }

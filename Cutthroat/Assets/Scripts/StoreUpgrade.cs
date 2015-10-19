@@ -17,7 +17,7 @@ public class StoreUpgrade
     {
         Definitions = new Dictionary<Type, StoreUpgrade>();
         Definitions.Add(Type.Storefront, new StoreUpgrade("Storefront", baseNumOfLevels, baseUpgradeCost, 1f, "Makes puppies who are walking by more likely to stop in."));
-        Definitions.Add(Type.ProductionSpeed, new StoreUpgrade("Brewing Speed", baseNumOfLevels, baseUpgradeCost, 0.5f, "Increases rate of potion creation, for shorter lines."));
+        Definitions.Add(Type.ProductionSpeed, new StoreUpgrade("Cauldron", baseNumOfLevels, baseUpgradeCost, 0.5f, "Increases speed of potion brewing, for shorter lines."));
         Definitions.Add(Type.Amenities, new StoreUpgrade("Amenities", baseNumOfLevels, baseUpgradeCost, 1f, "Causes puppies to have a positive experience at your store."));
     }
 

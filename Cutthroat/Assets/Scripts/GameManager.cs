@@ -3,21 +3,26 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum Recipe { DreamPowder, PassionPotion, QuickElixer, FleaPoultice }
+public enum Recipe { None, DreamPowder, PassionPotion, QuickElixer, FleaPoultice }
 
 public class RecipeDescription
 {
     public string Name;
     public string Description;
     public Recipe Type;
-    public int SpriteID;
+    public Sprite Sprite
+    {
+        get { return TextureManager.PotionTextures[Type]; }
+    }
+
+
     public Dictionary<Ingredient, int> Ingredients;
-    public RecipeDescription(Recipe Type, string Name, int SpriteID)
+    public RecipeDescription(Recipe Type, string Name)
     {
         Ingredients = new Dictionary<Ingredient, int>();
         this.Type = Type;
         this.Name = Name;
-        this.SpriteID = SpriteID;
+        
         GameManager.RecipeBook.Add(Type, this);
     }
 }
@@ -127,24 +132,24 @@ public class GameManager : MonoBehaviour {
     {
         RecipeBook = new Dictionary<Recipe, RecipeDescription>();
 
-        RecipeDescription dreamPowderRecipe = new RecipeDescription(Recipe.DreamPowder,"Dream Powder",0);
-        dreamPowderRecipe.Ingredients.Add(Ingredient.Ruby, 2);
+        RecipeDescription dreamPowderRecipe = new RecipeDescription(Recipe.DreamPowder,"Dream Powder");
+        dreamPowderRecipe.Ingredients.Add(Ingredient.Topaz, 1);
+        dreamPowderRecipe.Ingredients.Add(Ingredient.Sapphire, 1);
         dreamPowderRecipe.Description = "Allows puppies with insomnia to gently fall asleep.";
 
-        RecipeDescription passionPotionRecipe = new RecipeDescription(Recipe.PassionPotion, "Passion Potion", 0);
-        passionPotionRecipe.Ingredients.Add(Ingredient.Emerald, 1);
-        passionPotionRecipe.Ingredients.Add(Ingredient.Topaz, 2);
+        RecipeDescription passionPotionRecipe = new RecipeDescription(Recipe.PassionPotion, "Passion Potion");
+        passionPotionRecipe.Ingredients.Add(Ingredient.Ruby, 2);
         passionPotionRecipe.Description = "Gives a boost to energy so a puppy can play all day!";
 
-        RecipeDescription quickElixerRecipe = new RecipeDescription(Recipe.QuickElixer, "Quick Elixer", 0);
+        RecipeDescription quickElixerRecipe = new RecipeDescription(Recipe.QuickElixer, "Quick Elixer");
         quickElixerRecipe.Ingredients.Add(Ingredient.Ruby, 1);
-        quickElixerRecipe.Ingredients.Add(Ingredient.Emerald, 1);
-        quickElixerRecipe.Ingredients.Add(Ingredient.Sapphire, 1);
+        quickElixerRecipe.Ingredients.Add(Ingredient.Amber, 1);
+        quickElixerRecipe.Ingredients.Add(Ingredient.Topaz, 1);
         quickElixerRecipe.Description = "Drinking this elixer allows the puppy to move super fast.";
 
-        RecipeDescription fleaPoulticeRecipe = new RecipeDescription(Recipe.FleaPoultice, "Flea Poultice", 0);
-        fleaPoulticeRecipe.Ingredients.Add(Ingredient.Sapphire, 1);
-        fleaPoulticeRecipe.Ingredients.Add(Ingredient.Topaz, 1);
+        RecipeDescription fleaPoulticeRecipe = new RecipeDescription(Recipe.FleaPoultice, "Flea Poultice");
+        fleaPoulticeRecipe.Ingredients.Add(Ingredient.Ruby, 1);
+        fleaPoulticeRecipe.Ingredients.Add(Ingredient.Emerald, 1);
         fleaPoulticeRecipe.Description = "Applying this lotion removes a nasty case of the fleas.";
     }
     

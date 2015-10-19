@@ -7,6 +7,9 @@ public class StoreBase : MonoBehaviour
 {
     public bool Robot = true;
 
+    public string Name;
+    public GameObject Entrance;
+
     public int Gold = 500;
 	public List<CustomerScript> CustomerQueue;
 	public Recipe CurrentlyMaking;
@@ -104,6 +107,14 @@ public class StoreBase : MonoBehaviour
 
         Gold -= StoreUpgrade.Definitions[type].Levels[myUpgrades[type] + 1].cost;
         myUpgrades[type]++;
+
+        if (!Robot) //turn on the windmill
+        {
+            WindmillRotate rotator = GetComponentInChildren<WindmillRotate>();
+            if (type == StoreUpgrade.Type.Storefront && rotator != null)
+                rotator.RotationEnabled = true;
+        }
+
         return true;
     }
 

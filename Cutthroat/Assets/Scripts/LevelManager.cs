@@ -38,6 +38,8 @@ public class LevelManager : MonoBehaviour {
     {
         //Level 1 - Corgi Town
         LevelDefinition workingLevel = new LevelDefinition(LevelID.L1, "Corgi Town", LevelID.L2, 600);
+        workingLevel.marketVarianceMin = 0.5f;
+        workingLevel.marketVarianceMax = 1.4f;
 
         StoryEventData introEventData = new StoryEventData("Welcome!", PortraitID.Pomeranian, "Get of of my town you filthy peasant.", "Dr. Dogson");
         introEventData.Choices.Add(new StoryEventData("Uh, no?"));
