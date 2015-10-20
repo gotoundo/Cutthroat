@@ -6,7 +6,7 @@ public class TextureManager : MonoBehaviour {
 
     public static TextureManager Main;
     public static Dictionary<Recipe, Sprite> PotionTextures;
-    public static Dictionary<Ingredient, Sprite> IngredientTextures;
+    //public static Dictionary<Ingredient, Sprite> IngredientTextures;
     public static Dictionary<PortraitID, Sprite> PortraitTextures;
     public static Dictionary<StoreUpgrade.Type, Sprite> UpgradeTextures;
 
@@ -36,13 +36,13 @@ public class TextureManager : MonoBehaviour {
         PotionTextures.Add(Recipe.QuickElixer, PotionIcons[3]);
         PotionTextures.Add(Recipe.FleaPoultice, PotionIcons[0]);
 
-        IngredientTextures = new Dictionary<Ingredient, Sprite>();
-        IngredientTextures.Add(Ingredient.Ruby, IngredientIcons[0]);
-        IngredientTextures.Add(Ingredient.Amber, IngredientIcons[1]);
-        IngredientTextures.Add(Ingredient.Topaz, IngredientIcons[2]);
-        IngredientTextures.Add(Ingredient.Emerald, IngredientIcons[3]);
-        IngredientTextures.Add(Ingredient.Sapphire, IngredientIcons[4]);
-        IngredientTextures.Add(Ingredient.Amethyst, IngredientIcons[5]);
+        /*IngredientTextures = new Dictionary<Ingredient, Sprite>();
+        IngredientTextures.Add(Ingredient.Red, IngredientIcons[0]);
+        IngredientTextures.Add(Ingredient.Orange, IngredientIcons[1]);
+        IngredientTextures.Add(Ingredient.Yellow, IngredientIcons[2]);
+        IngredientTextures.Add(Ingredient.Green, IngredientIcons[3]);
+        IngredientTextures.Add(Ingredient.Blue, IngredientIcons[4]);
+        IngredientTextures.Add(Ingredient.Purple, IngredientIcons[5]);*/
 
 
         PortraitTextures = new Dictionary<PortraitID, Sprite>();

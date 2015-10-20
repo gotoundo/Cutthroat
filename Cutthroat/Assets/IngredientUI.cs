@@ -18,7 +18,7 @@ public class IngredientUI : MonoBehaviour
     {
         if(!hasBeenSetUp)
         {
-            image.overrideSprite = TextureManager.IngredientTextures[ingredient];
+            image.overrideSprite = GameManager.IngredientBook[ingredient].Sprite;// TextureManager.IngredientTextures[ingredient];
             hasBeenSetUp = true;
         }
 

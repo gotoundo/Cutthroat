@@ -36,9 +36,12 @@ public class CustomerScript : MonoBehaviour {
 
     const float baseStoreAwareness = 20f;
     const float baseStoreFavorability = 0f;
-    const float couldBuyFavorability = 10f;
-    const float couldNotBuyFavorability = -5f;
-    const float waitedForNothingFavorability = -10f;
+    const float couldBuyFavorability = 30f;
+    const float couldNotBuyFavorability = -30f;
+    const float couldNotBuyDueToWaitFavorability = -30f;
+    const float couldNotBuyDueToIngredientsFavorability = -30f;
+    const float couldNotBuyDueToPriceFavorability = -30f;
+    const float waitedForNothingFavorability = -30f;
     
 
     const int maxTrips = 3;
@@ -276,6 +279,7 @@ public class CustomerScript : MonoBehaviour {
             else
             {
                 inspectorData.AddUpdate(targetedStore.Name + " is charging too much for " + desiredProduct.ToString() + "!");
+                AddFavorability(targetedStore, couldNotBuyDueToPriceFavorability);
                 GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[4], 1.5f);
                 LeaveStore();
                 TryAnotherStore();
@@ -284,6 +288,7 @@ public class CustomerScript : MonoBehaviour {
         else
         {
             inspectorData.AddUpdate(targetedStore.Name + " doesn't have any "+desiredProduct.ToString()+".");
+            AddFavorability(targetedStore, couldNotBuyDueToIngredientsFavorability);
             GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[3], 1.5f);
             LeaveStore();
             TryAnotherStore();
@@ -307,6 +312,7 @@ public class CustomerScript : MonoBehaviour {
         if (currentWaitTime > maxWaitTime)
         {
             inspectorData.AddUpdate("The wait at "+ targetedStore.Name + " is too long!");
+            AddFavorability(targetedStore, couldNotBuyDueToWaitFavorability);
             GetComponentInParent<OverheadIconManager>().ShowIcon(TextureManager.Main.OverheadIcons[2], 1.5f);
             LeaveStore();
             TryAnotherStore();

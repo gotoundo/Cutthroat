@@ -34,7 +34,7 @@ public class ProgressPanel : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        storeName.text = myStore.gameObject.name;
+        storeName.text = myStore.Name;
 	
 	}
 	

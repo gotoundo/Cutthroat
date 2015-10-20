@@ -21,7 +21,7 @@ public class UIPurchaseOption : MonoBehaviour {
         //gemIcon.overrideSprite = TextureManager.IngredientTextures[ItemSold];
         GemDisplay.GetComponent<IngredientUI>().ingredient = ItemSold;
         MarketIndicator.gameObject.SetActive(false);
-        ItemName.text = ItemSold.ToString();
+        ItemName.text = GameManager.IngredientBook[ItemSold].Name;
     }
 	
 	// Update is called once per frame

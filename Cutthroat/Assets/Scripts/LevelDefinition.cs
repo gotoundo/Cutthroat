@@ -21,6 +21,29 @@ public class LevelDefinition
     public float marketVarianceMin = .5f;
     public float marketVarianceMax = 1.5f;
 
+    LevelCondition introCondition;
+    StoryEventData lastStoryEvent;
+
+    public void AddIntroDialog(PortraitID portrait, string title, string dialogText, string optionText = "OK")
+    {
+        StoryEventData newEvent = new StoryEventData(title, portrait, dialogText, portrait.ToString(), optionText);
+
+        if (introCondition == null)
+        {
+            introCondition = new LevelCondition(Result.Story, 0);
+            introCondition.triggeredStory = newEvent;
+            Conditions.Add(introCondition);
+        }
+        else
+            lastStoryEvent.Choices.Add(newEvent);
+
+        lastStoryEvent = newEvent;
+    }
+    public void AddIntroDialog(string optionText, string dialogText = "")
+    {
+         AddIntroDialog(lastStoryEvent.Portrait, lastStoryEvent.EventTitle, dialogText, optionText);
+    }
+
     public LevelDefinition(LevelID myID, string Title, LevelID WinUnlock, int StartingGold, bool testLevel = false)
     {
         this.myID = myID;
@@ -57,7 +80,7 @@ public class LevelDefinition
     {
         foreach (LevelCondition condition in Conditions)
         {
-            if (condition.trigger == TriggerFrequency.Continuous || Timepiece.CurrentDay > condition.deadline)
+            if (condition.hasBeenTriggered!=true && (condition.trigger == TriggerFrequency.Continuous || Timepiece.CurrentDay > condition.deadline))
             {
                 if (condition.qualifier == Qualifier.None)
                     return condition.ifPassedResult();
@@ -97,7 +120,7 @@ public class LevelDefinition
         List<StoryEventData> TriggeredEvents = new List<StoryEventData>();
         foreach (LevelCondition condition in Conditions)
         {
-            if ((!condition.hasBeenTriggered && condition.triggeredStory != null) &&
+            if (condition.result== Result.Story && (!condition.hasBeenTriggered && condition.triggeredStory != null) &&
                 (condition.trigger == TriggerFrequency.Continuous || Timepiece.CurrentDay > condition.deadline))
             {
                 if (condition.qualifier == Qualifier.None)

@@ -3,38 +3,15 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum Recipe { None, DreamPowder, PassionPotion, QuickElixer, FleaPoultice }
-
-public class RecipeDescription
-{
-    public string Name;
-    public string Description;
-    public Recipe Type;
-    public Sprite Sprite
-    {
-        get { return TextureManager.PotionTextures[Type]; }
-    }
-
-
-    public Dictionary<Ingredient, int> Ingredients;
-    public RecipeDescription(Recipe Type, string Name)
-    {
-        Ingredients = new Dictionary<Ingredient, int>();
-        this.Type = Type;
-        this.Name = Name;
-        
-        GameManager.RecipeBook.Add(Type, this);
-    }
-}
-
 //this guy is recreated every time we load a level scene
-public class GameManager : MonoBehaviour {
-
+public class GameManager : MonoBehaviour
+{
     public static GameManager Main;
     public static List<StoreBase> AllStores;
-	public static List<CustomerScript> AllCustomers;
+    public static List<CustomerScript> AllCustomers;
     public static List<HouseScript> AllHouses;
     public static Dictionary<Recipe, RecipeDescription> RecipeBook;
+    public static Dictionary<Ingredient, IngredientDescription> IngredientBook;
 
     public GameObject playerStore;
     public GameObject inspectorPanel;
@@ -52,18 +29,20 @@ public class GameManager : MonoBehaviour {
     public bool autoLose = false;
 
     // Use this for initialization
-    void Awake () {
+    void Awake()
+    {
         AllStores = new List<StoreBase>();
         AllCustomers = new List<CustomerScript>();
         AllHouses = new List<HouseScript>();
 
         player = playerStore.GetComponent<StoreBase>();
+        LoadIngredients();
         LoadRecipes();
 
         Main = this;
         gameRunning = true;
 
-        CurrentLevel = LevelManager.SelectedLevel != null ? LevelManager.SelectedLevel : new LevelDefinition(LevelID.None,"Default Level",LevelID.None,500, true);
+        CurrentLevel = LevelManager.SelectedLevel != null ? LevelManager.SelectedLevel : new LevelDefinition(LevelID.None, "Default Level", LevelID.None, 500, true);
         CurrentLevel.ResetConditions();
         Zeitgeist.Initialize(CurrentLevel);
         StoreUpgrade.Initialize();
@@ -74,7 +53,7 @@ public class GameManager : MonoBehaviour {
     {
         AudioManager.Main.Source.clip = AudioManager.Main.Music[0];
         AudioManager.Main.Source.Play();
-        
+
 
         //IntroPanel.SetActive(true);
         WinPanel.SetActive(false);
@@ -89,11 +68,11 @@ public class GameManager : MonoBehaviour {
 
         if (gameRunning)
         {
-            
+
             List<StoryEventData> TriggeredEvents = CurrentLevel.TriggerStoryEvent();
             RunTriggeredEvents(TriggeredEvents);
         }
-        
+
         CheckWinOrLose();
     }
 
@@ -111,16 +90,25 @@ public class GameManager : MonoBehaviour {
             storyWindow.NPCName.text = storyData.NPCName;
             storyWindow.Portrait.overrideSprite = TextureManager.PortraitTextures[storyData.Portrait];
 
+            if (storyWindow.OptionsButtons == null)
+                storyWindow.OptionsButtons = new List<GameObject>();
+            else
+            {
+                foreach (GameObject o in storyWindow.OptionsButtons)
+                    Destroy(o);
+            }
+
             foreach (StoryEventData choiceData in storyData.Choices)
             {
                 GameObject choiceObject = Instantiate(storyWindow.OptionsButtonTemplate);
+                storyWindow.OptionsButtons.Add(choiceObject);
                 choiceObject.transform.SetParent(storyWindow.OptionsPanel.transform);
                 StoryChoiceUI choiceUI = choiceObject.GetComponent<StoryChoiceUI>();
                 choiceUI.ButtonText.text = choiceData.ButtonText;
                 choiceUI.StoryResult = choiceData;
             }
 
-            if(storyData.Choices.Count == 0)
+            if (storyData.Choices.Count == 0)
             {
                 gameRunning = true;
                 StoryPanel.SetActive(false);
@@ -132,27 +120,36 @@ public class GameManager : MonoBehaviour {
     {
         RecipeBook = new Dictionary<Recipe, RecipeDescription>();
 
-        RecipeDescription dreamPowderRecipe = new RecipeDescription(Recipe.DreamPowder,"Dream Powder");
-        dreamPowderRecipe.Ingredients.Add(Ingredient.Topaz, 1);
-        dreamPowderRecipe.Ingredients.Add(Ingredient.Sapphire, 1);
-        dreamPowderRecipe.Description = "Allows puppies with insomnia to gently fall asleep.";
+        RecipeDescription dreamPowderRecipe = new RecipeDescription(Recipe.DreamPowder, "Dream Powder", "Allows puppies with insomnia to gently fall asleep.");
+        dreamPowderRecipe.Ingredients.Add(Ingredient.Yellow, 1);
+        dreamPowderRecipe.Ingredients.Add(Ingredient.Blue, 1);
 
-        RecipeDescription passionPotionRecipe = new RecipeDescription(Recipe.PassionPotion, "Passion Potion");
-        passionPotionRecipe.Ingredients.Add(Ingredient.Ruby, 2);
-        passionPotionRecipe.Description = "Gives a boost to energy so a puppy can play all day!";
+        RecipeDescription passionPotionRecipe = new RecipeDescription(Recipe.PassionPotion, "Passion Potion", "Gives a boost to energy so a puppy can play all day!");
+        passionPotionRecipe.Ingredients.Add(Ingredient.Red, 2);
 
-        RecipeDescription quickElixerRecipe = new RecipeDescription(Recipe.QuickElixer, "Quick Elixer");
-        quickElixerRecipe.Ingredients.Add(Ingredient.Ruby, 1);
-        quickElixerRecipe.Ingredients.Add(Ingredient.Amber, 1);
-        quickElixerRecipe.Ingredients.Add(Ingredient.Topaz, 1);
-        quickElixerRecipe.Description = "Drinking this elixer allows the puppy to move super fast.";
+        RecipeDescription quickElixerRecipe = new RecipeDescription(Recipe.QuickElixer, "Quick Elixer", "Drinking this elixer allows the puppy to move super fast.");
+        quickElixerRecipe.Ingredients.Add(Ingredient.Red, 1);
+        quickElixerRecipe.Ingredients.Add(Ingredient.Orange, 1);
+        quickElixerRecipe.Ingredients.Add(Ingredient.Yellow, 1);
 
-        RecipeDescription fleaPoulticeRecipe = new RecipeDescription(Recipe.FleaPoultice, "Flea Poultice");
-        fleaPoulticeRecipe.Ingredients.Add(Ingredient.Ruby, 1);
-        fleaPoulticeRecipe.Ingredients.Add(Ingredient.Emerald, 1);
-        fleaPoulticeRecipe.Description = "Applying this lotion removes a nasty case of the fleas.";
+        RecipeDescription fleaPoulticeRecipe = new RecipeDescription(Recipe.FleaPoultice, "Flea Poultice", "Applying this lotion removes a nasty case of the fleas.");
+        fleaPoulticeRecipe.Ingredients.Add(Ingredient.Red, 1);
+        fleaPoulticeRecipe.Ingredients.Add(Ingredient.Green, 1);
     }
-    
+
+    public static void LoadIngredients()
+    {
+        IngredientBook = new Dictionary<Ingredient, IngredientDescription>();
+        new IngredientDescription(Ingredient.Red, "Spices", "Hot spices", 0, 20);
+        new IngredientDescription(Ingredient.Orange, "Herbs", "Exotic flowers", 1, 15);
+        new IngredientDescription(Ingredient.Yellow, "Mushroom", "Mystic fungi", 2, 5);
+        new IngredientDescription(Ingredient.Green, "Eggs", "Unhatched drake eggs", 3, 15);
+        new IngredientDescription(Ingredient.Blue, "Arctic Ice", "Magically frozen water", 4, 10);
+        new IngredientDescription(Ingredient.Purple, "Fish", "From the deepest, darkest lakes", 5, 25);
+        new IngredientDescription(Ingredient.White, "Bone", "Recovered from the ziggurat", 6, 8);
+        new IngredientDescription(Ingredient.Black, "Onyx", "Necromancer's treasure", 7, 50);
+    }
+
 
     void CreatePuppies()
     {
@@ -167,7 +164,7 @@ public class GameManager : MonoBehaviour {
     bool saved = false;
     void CheckWinOrLose()
     {
-        
+
 
 
         if (autoWin || gameRunning && CurrentLevel.HasWon())

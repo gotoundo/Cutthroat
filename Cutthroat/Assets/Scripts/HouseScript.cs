@@ -4,7 +4,7 @@ using System.Collections;
 public class HouseScript : MonoBehaviour {
 
     public GameObject customer;
-    int customersToAHouse = 6;
+    int customersToAHouse = 4;
 
     public static int count;
     public  int myCount;

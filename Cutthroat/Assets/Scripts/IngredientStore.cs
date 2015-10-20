@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-public enum Ingredient { Ruby, Amethyst, Sapphire, Emerald, Topaz, Amber }
+
 public class IngredientStore : MonoBehaviour {
 
     public static IngredientStore Main;
@@ -34,12 +34,10 @@ public class IngredientStore : MonoBehaviour {
         CurrentIngredientPrices = new Dictionary<Ingredient, int>();
 
         DefaultIngredientPrices = new Dictionary<Ingredient, int>();
-        DefaultIngredientPrices.Add(Ingredient.Ruby, 20);
-        DefaultIngredientPrices.Add(Ingredient.Amber, 15);
-        DefaultIngredientPrices.Add(Ingredient.Topaz, 5);
-        DefaultIngredientPrices.Add(Ingredient.Emerald, 15);
-        DefaultIngredientPrices.Add(Ingredient.Sapphire, 10);
-        DefaultIngredientPrices.Add(Ingredient.Amethyst, 25);
+        foreach(IngredientDescription ingr in GameManager.IngredientBook.Values)
+        {
+            DefaultIngredientPrices.Add(ingr.Type, ingr.DefaultPrice);
+        }
         
 
         foreach (Ingredient ingr in GameManager.Main.CurrentLevel.StartingIngredients.Keys)
